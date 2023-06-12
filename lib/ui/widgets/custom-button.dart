@@ -8,10 +8,12 @@ class CustomButton extends StatelessWidget {
       {super.key,
       required this.title,
       required this.tap,
-      this.isDefault = true});
+      this.isDefault = true,
+      this.needBgColorChnage});
   final String title;
   final GestureTapCallback tap;
   final bool? isDefault;
+  final bool? needBgColorChnage;
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +24,15 @@ class CustomButton extends StatelessWidget {
                     ? BorderRadius.circular(pm24)
                     : BorderRadius.circular(pm10))),
             minimumSize: const MaterialStatePropertyAll(Size(pm80, pm40)),
-            backgroundColor: MaterialStatePropertyAll(blueColor)),
+            backgroundColor: needBgColorChnage == true
+                ? MaterialStatePropertyAll(whiteColor)
+                : MaterialStatePropertyAll(blueColor)),
         onPressed: tap,
         child: Text(
           title,
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(color: whiteColor, fontSize: pm18),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              color: needBgColorChnage == true ? blackColor : whiteColor,
+              fontSize: pm18),
         ));
   }
 }

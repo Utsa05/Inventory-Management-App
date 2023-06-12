@@ -7,21 +7,21 @@ String thanaListsToJson(List<ThanaModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ThanaModel {
-  ThanaModel({
-    this.districtId,
-    this.name,
-  });
+  ThanaModel({this.districtId, this.name, this.id});
 
   String? districtId;
   String? name;
+  String? id;
 
   factory ThanaModel.fromJson(Map<String, dynamic> json) => ThanaModel(
         districtId: json["district_id"],
         name: json["name"],
+        id: json["id"],
       );
 
   Map<String, dynamic> toJson() => {
         "district_id": districtId,
         "name": name,
+        "id": id,
       };
 }
