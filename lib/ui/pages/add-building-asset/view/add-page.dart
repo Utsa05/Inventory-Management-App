@@ -6,7 +6,10 @@ import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/constatns/pm.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/controller/add-building-asset-controller.dart';
+import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart';
+import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-model.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/item-model.dart';
+import 'package:inventory_mangament_app/ui/pages/add-building-asset/service/building-service.dart';
 
 class AddPage extends StatelessWidget {
   const AddPage({super.key});
@@ -47,11 +50,11 @@ class AddPage extends StatelessWidget {
             children: [
               Expanded(
                   child: ItemList(
-                controller: controller,
-                itemList: controller.routeItemInfo["isBuilding"] == true
-                    ? controller.buildingList
-                    : controller.assetList,
-              )),
+                      controller: controller, itemList: controller.buildingList
+                      // controller.routeItemInfo["isBuilding"] == true
+                      //     ? controller.buildingList
+                      //     : controller.assetList,
+                      )),
               Addnew(controller: controller)
             ],
           ),
@@ -99,13 +102,19 @@ class Addnew extends StatelessWidget {
             ),
             TextButton(
                 onPressed: () {
-                  Random random = Random();
+                  //test - create new building
+                  controller.addNewBuilding(
+                      "1",
+                      BuildingModel(
+                          name: controller.textEditingController.text,
+                          active: true));
+                  // Random random = Random();
 
-                  controller.addItem(ItemModel(
-                      title: controller.textEditingController.text,
-                      district: controller.routeItemInfo["district"],
-                      thana: controller.routeItemInfo["thana"],
-                      id: random.nextInt(10000)));
+                  // controller.addItem(ItemModel(
+                  //     title: controller.textEditingController.text,
+                  //     district: controller.routeItemInfo["district"],
+                  //     thana: controller.routeItemInfo["thana"],
+                  //     id: random.nextInt(10000)));
 
                   controller.textEditingController.clear();
                 },
@@ -129,24 +138,28 @@ class ItemList extends StatelessWidget {
     required this.itemList,
     required this.controller,
   });
-  final List<ItemModel> itemList;
+  final List<BuildingCreateResponseModel> itemList;
   final AddBuildingAssetController controller;
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return itemList.isNotEmpty
-          ? ListView.builder(
-              itemCount: itemList.length,
-              itemBuilder: (context, index) {
-                ItemModel item = itemList[index];
-                return ItemWidget(item: item, controller: controller);
-              },
+      return controller.isLoading.value == true
+          ? const Center(
+              child: CircularProgressIndicator(),
             )
-          : const Align(
-              alignment: Alignment.center,
-              child: Text("Not have Any Item"),
-            );
+          : itemList.isNotEmpty
+              ? ListView.builder(
+                  itemCount: itemList.length,
+                  itemBuilder: (context, index) {
+                    BuildingCreateResponseModel item = itemList[index];
+                    return ItemWidget(item: item, controller: controller);
+                  },
+                )
+              : const Align(
+                  alignment: Alignment.center,
+                  child: Text("Not have Any Item"),
+                );
     });
   }
 }
@@ -158,7 +171,7 @@ class ItemWidget extends StatelessWidget {
     required this.controller,
   });
 
-  final ItemModel item;
+  final BuildingCreateResponseModel item;
   final AddBuildingAssetController controller;
 
   @override
@@ -175,7 +188,7 @@ class ItemWidget extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              item.title,
+              item.name,
               style: Theme.of(context)
                   .textTheme
                   .displaySmall!
@@ -190,7 +203,8 @@ class ItemWidget extends StatelessWidget {
               backgroundColor: Colors.red,
               child: IconButton(
                   onPressed: () {
-                    controller.removeItem(item);
+                    // controller.removeItem(item);
+                    controller.deleteBuilding("1", item.id.toString());
                   },
                   icon: Icon(
                     Icons.delete_outline,

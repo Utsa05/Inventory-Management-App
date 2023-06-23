@@ -21,7 +21,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final HomeController homeController = Get.put(HomeController());
 
-  bool isAdmin = false;
+  bool isAdmin = true;
 
   @override
   Widget build(BuildContext context) {
