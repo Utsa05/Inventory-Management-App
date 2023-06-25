@@ -1,5 +1,8 @@
 //view
 const String appName = "Inventory Management";
+const String email = "email";
+const String token = "toekn";
+const String userType = "user-type";
 const String dashboard = "Dashboard";
 const String login = "Sign in";
 const String create = "Sign Up";

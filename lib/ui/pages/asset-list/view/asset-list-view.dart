@@ -250,7 +250,13 @@ class Addnew extends StatelessWidget {
                   backgroundColor: blueColor,
                   child: IconButton(
                       onPressed: () {
-                        controller.captureImage(context);
+                        if (controller
+                            .assetTextEditigngController.text.isNotEmpty) {
+                          controller.captureImage(context);
+                        } else {
+                          Get.snackbar("Ops", "Asset name cannot be empty",
+                              backgroundColor: Colors.red);
+                        }
 
                         // controller.addAssetItem(
                         // AssetModel(

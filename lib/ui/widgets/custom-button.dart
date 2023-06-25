@@ -9,11 +9,13 @@ class CustomButton extends StatelessWidget {
       required this.title,
       required this.tap,
       this.isDefault = true,
-      this.needBgColorChnage});
+      this.needBgColorChnage,
+      this.isLoadingButton});
   final String title;
   final GestureTapCallback tap;
   final bool? isDefault;
   final bool? needBgColorChnage;
+  final bool? isLoadingButton;
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +29,19 @@ class CustomButton extends StatelessWidget {
             backgroundColor: needBgColorChnage == true
                 ? MaterialStatePropertyAll(whiteColor)
                 : MaterialStatePropertyAll(blueColor)),
-        onPressed: tap,
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-              color: needBgColorChnage == true ? blackColor : whiteColor,
-              fontSize: pm18),
-        ));
+        onPressed: isLoadingButton == true ? null : tap,
+        child: isLoadingButton == true
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(
+                  color: whiteColor,
+                ),
+              )
+            : Text(
+                title,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color: needBgColorChnage == true ? blackColor : whiteColor,
+                    fontSize: pm18),
+              ));
   }
 }

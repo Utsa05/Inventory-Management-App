@@ -6,9 +6,11 @@ import 'package:inventory_mangament_app/constatns/pm.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
+import 'package:inventory_mangament_app/ui/pages/registration/controller/register-controller.dart';
 
 import '../../../widgets/custom-button.dart';
 import '../../../widgets/text-box.dart';
+import 'package:get/get.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({super.key});
@@ -16,6 +18,7 @@ class RegisterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final RegisterController registerController = Get.put(RegisterController());
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(pm28),
@@ -40,31 +43,41 @@ class RegisterView extends StatelessWidget {
               ),
               CustomTextBox(
                 hint: enterEmail,
-                controller: TextEditingController(),
+                controller: registerController.emailController,
               ),
               const SizedBox(
                 height: pm20,
               ),
               CustomTextBox(
                 hint: enterPassword,
-                controller: TextEditingController(),
+                controller: registerController.passwordController,
               ),
               const SizedBox(
                 height: pm20,
               ),
               CustomTextBox(
                 hint: enterConfirmPass,
-                controller: TextEditingController(),
+                controller: registerController.confirmPasswordController,
               ),
               const SizedBox(
                 height: pm20,
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: CustomButton(
-                  tap: () {},
-                  title: create,
-                ),
+                child: Obx(() {
+                  return registerController.isLoading.value
+                      ? CustomButton(
+                          tap: () {},
+                          title: create,
+                          isLoadingButton: true,
+                        )
+                      : CustomButton(
+                          tap: () {
+                            registerController.doValidateUser();
+                          },
+                          title: create,
+                        );
+                }),
               ),
               const SizedBox(
                 height: pm40,

@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_mangament_app/constatns/storage.dart';
 import 'package:inventory_mangament_app/ui/pages/home/model/building-model.dart';
 import 'package:inventory_mangament_app/ui/pages/home/model/district-model.dart';
+
 import 'package:inventory_mangament_app/ui/pages/home/model/thana-model.dart';
 import 'package:inventory_mangament_app/ui/pages/home/service/building-service.dart';
 import 'package:inventory_mangament_app/ui/pages/home/service/thana-service.dart';
@@ -15,6 +17,7 @@ class HomeController extends GetxController {
   var districtController = TextEditingController().obs;
   var thanaController = TextEditingController().obs;
   var buildingController = TextEditingController().obs;
+  var isThanaSelected = false.obs;
   GlobalKey<AutoCompleteTextFieldState<String>> key1 = GlobalKey();
   GlobalKey<AutoCompleteTextFieldState<String>> key2 = GlobalKey();
   var selectedDistrictId = "none".obs;

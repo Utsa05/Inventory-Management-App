@@ -5,16 +5,17 @@ import "dart:io";
 
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
-import "package:inventory_mangament_app/constatns/api.dart";
-import "package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart";
-import "package:inventory_mangament_app/ui/pages/add-building-asset/model/building-model.dart";
-import "package:inventory_mangament_app/ui/pages/add-building-asset/model/error-response-model.dart";
 
-class BuildingService {
-  static Future<bool> addBuilding(String thanaId, BuildingModel data) async {
+import "package:inventory_mangament_app/ui/pages/add-building-asset/model/error-response-model.dart";
+import "package:inventory_mangament_app/ui/pages/floor-room/model/floor-request-model.dart";
+import "package:inventory_mangament_app/ui/pages/floor-room/model/floor-response-model.dart";
+
+class FloorService {
+  static Future<bool> addFloor(
+      String buildingId, FloorRequestModel data) async {
     //var response;
     String url =
-        "http://192.168.0.101:5000/api/admin/projects/1/thanas/$thanaId/buildings/";
+        "http://192.168.0.101:5000/api/user/buildings/$buildingId/floors/";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -49,11 +50,10 @@ class BuildingService {
     }
   }
 
-  static Future<List<BuildingCreateResponseModel>> allBuildign(
-      String thanaId) async {
+  static Future<List<FloorResponseModel>> allBuildign(String buildingId) async {
     //var response;
     String url =
-        "http://192.168.0.101:5000/api/admin/projects/1/thanas/$thanaId/buildings/";
+        "http://192.168.0.101:5000/api/user/buildings/$buildingId/floors/";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -75,15 +75,15 @@ class BuildingService {
       var responseData = json.decode(response.body);
 
       //Creating a list to store input data;
-      List<BuildingCreateResponseModel> buildingList = [];
+      List<FloorResponseModel> buildingList = [];
       for (var building in responseData) {
-        BuildingCreateResponseModel user = BuildingCreateResponseModel(
+        FloorResponseModel user = FloorResponseModel(
           id: building["id"] as int,
           name: building["name"],
           active: building["active"],
-          // createdAt: building["createdAt"] ?? DateTime(2023),
-          // thanaId: building["thanaId"] ?? 0,
-          // updatedAt: building["updatedAt"] ?? DateTime(2023),
+          buildingId: building["buildingId"],
+          createdAt: DateTime.parse(building["createdAt"]),
+          updatedAt: DateTime.parse(building["updatedAt"]),
         );
 
         //Adding user to the list.
@@ -102,10 +102,10 @@ class BuildingService {
     }
   }
 
-  static Future<bool> deleteBuilding(String thanaId, String buildingId) async {
+  static Future<bool> deleteFloor(String floorId, String buildingId) async {
     //var response;
     String url =
-        "http://192.168.0.101:5000/api/admin/projects/1/thanas/$thanaId/buildings/$buildingId";
+        "http://192.168.0.101:5000/api/user/buildings/$buildingId/floors/$floorId";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',

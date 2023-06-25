@@ -15,17 +15,17 @@ class BuildingCreateResponseModel {
   final int id;
   final String name;
   final bool active;
-  final int thanaId;
-  final DateTime updatedAt;
-  final DateTime createdAt;
+  // final int? thanaId;
+  // final DateTime? updatedAt;
+  // final DateTime? createdAt;
 
   BuildingCreateResponseModel({
     required this.id,
     required this.name,
     required this.active,
-    required this.thanaId,
-    required this.updatedAt,
-    required this.createdAt,
+    // required this.thanaId,
+    // required this.updatedAt,
+    // required this.createdAt,
   });
 
   BuildingCreateResponseModel copyWith({
@@ -40,9 +40,9 @@ class BuildingCreateResponseModel {
         id: id ?? this.id,
         name: name ?? this.name,
         active: active ?? this.active,
-        thanaId: thanaId ?? this.thanaId,
-        updatedAt: updatedAt ?? this.updatedAt,
-        createdAt: createdAt ?? this.createdAt,
+        // thanaId: thanaId ?? this.thanaId,
+        // updatedAt: updatedAt ?? this.updatedAt,
+        // createdAt: createdAt ?? this.createdAt,
       );
 
   factory BuildingCreateResponseModel.fromJson(Map<String, dynamic> json) =>
@@ -50,17 +50,17 @@ class BuildingCreateResponseModel {
         id: json["id"] as int,
         name: json["name"],
         active: json["active"] as bool,
-        thanaId: json["thanaId"] as int,
-        updatedAt: json["updatedAt"] as DateTime,
-        createdAt: json["createdAt"] as DateTime,
+        // thanaId: json["thanaId"] as int,
+        // updatedAt: json["updatedAt"] as DateTime,
+        // createdAt: json["createdAt"] as DateTime,
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "active": active,
-        "thanaId": thanaId,
-        "updatedAt": updatedAt.toIso8601String(),
-        "createdAt": createdAt.toIso8601String(),
+        // "thanaId": thanaId,
+        // "updatedAt": updatedAt!.toIso8601String(),
+        // "createdAt": createdAt!.toIso8601String(),
       };
 }

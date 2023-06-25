@@ -6,6 +6,7 @@ import 'package:inventory_mangament_app/constatns/pm.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
+import 'package:inventory_mangament_app/ui/pages/login/controller/login-controller.dart';
 
 import '../../../widgets/custom-button.dart';
 import '../../../widgets/text-box.dart';
@@ -16,6 +17,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final LoignController controller = Get.put(LoignController());
     return Scaffold(
       backgroundColor: primaryColor,
       body: Container(
@@ -41,26 +43,34 @@ class LoginView extends StatelessWidget {
               ),
               CustomTextBox(
                 hint: enterEmail,
-                controller: TextEditingController(),
+                controller: controller.emailController,
               ),
               const SizedBox(
                 height: pm20,
               ),
               CustomTextBox(
                 hint: enterPassword,
-                controller: TextEditingController(),
+                controller: controller.passwordController,
               ),
               const SizedBox(
                 height: pm20,
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: CustomButton(
-                  tap: () {
-                    Get.offAllNamed(homeRoute);
-                  },
-                  title: login,
-                ),
+                child: Obx(() {
+                  return controller.isLoading.value
+                      ? CustomButton(
+                          tap: () {},
+                          title: create,
+                          isLoadingButton: true,
+                        )
+                      : CustomButton(
+                          tap: () {
+                            controller.doValidateUser();
+                          },
+                          title: login,
+                        );
+                }),
               ),
               const SizedBox(
                 height: pm15,

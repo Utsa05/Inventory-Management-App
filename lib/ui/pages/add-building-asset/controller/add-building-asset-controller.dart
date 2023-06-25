@@ -5,23 +5,32 @@ import 'package:get/get.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-model.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/item-model.dart';
+import 'package:inventory_mangament_app/ui/pages/add-building-asset/service/asset-service.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/service/building-service.dart';
 
 class AddBuildingAssetController extends GetxController {
   dynamic routeItemInfo = Get.arguments;
-  var assetList = <ItemModel>[].obs;
+
   var buildingList = <BuildingCreateResponseModel>[].obs;
+  var assetList = <BuildingCreateResponseModel>[].obs;
   final TextEditingController textEditingController = TextEditingController();
   var isLoading = false.obs;
   BuildingCreateResponseModel? building;
 
   @override
   void onInit() {
-    getBuilding();
+    if (routeItemInfo["isBuilding"] == true) {
+      getBuilding();
+    } else {
+      getAssets();
+    }
+
     super.onInit();
   }
 
   void getBuilding() async {
+    isLoading.value = true;
+    print("hi");
     var list = (await BuildingService.allBuildign("1"))
         .cast<BuildingCreateResponseModel>();
 
@@ -57,19 +66,58 @@ class AddBuildingAssetController extends GetxController {
     isLoading(false);
   }
 
-  void addItem(ItemModel item) {
-    if (routeItemInfo["isBuilding"] == true) {
-      //buildingList.add(item);
-    } else {
-      assetList.add(item);
-    }
+  //assets
+  void getAssets() async {
+    isLoading.value = true;
+    print("hi");
+    var list =
+        (await AssetService.allAsset()).cast<BuildingCreateResponseModel>();
+
+    print(assetList.length);
+    //buildingList.add(building!);
+    isLoading.value = false;
+    assetList.value = list;
+    print(assetList.length);
   }
 
-  void removeItem(ItemModel item) {
-    if (routeItemInfo["isBuilding"] == true) {
-      buildingList.remove(item);
-    } else {
-      assetList.remove(item);
-    }
+  void addNewAsset(BuildingModel data) async {
+    isLoading.value = true;
+
+    await AssetService.addAsset(data);
+
+    var list =
+        (await AssetService.allAsset()).cast<BuildingCreateResponseModel>();
+
+    print(assetList.length);
+    //buildingList.add(building!);
+    isLoading.value = false;
+    assetList.value = list;
+    print(assetList.length);
   }
+
+  void deleteAsset(String assetId) async {
+    isLoading(true);
+    bool isDeleted = await AssetService.deleteAsset(assetId);
+
+    if (isDeleted) {
+      getAssets();
+    }
+    isLoading(false);
+  }
+
+  // void addItem(ItemModel item) {
+  //   if (routeItemInfo["isBuilding"] == true) {
+  //     //buildingList.add(item);
+  //   } else {
+  //     assetList.add(item);
+  //   }
+  // }
+
+  // void removeItem(ItemModel item) {
+  //   if (routeItemInfo["isBuilding"] == true) {
+  //     buildingList.remove(item);
+  //   } else {
+  //     assetList.remove(item);
+  //   }
+  // }
 }

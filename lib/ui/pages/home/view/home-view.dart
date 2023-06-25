@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/constatns/pm.dart';
+import 'package:inventory_mangament_app/constatns/storage.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-model.dart';
 import 'package:inventory_mangament_app/ui/pages/home/controller/home-controller.dart';
@@ -10,6 +11,7 @@ import 'package:inventory_mangament_app/ui/widgets/custom-button.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -21,12 +23,38 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final HomeController homeController = Get.put(HomeController());
 
-  bool isAdmin = true;
+  bool isAdmin = false;
+  late String emailUser = "dfss";
+  late String typeuser = "dfsd";
+
+  @override
+  void initState() {
+    initDb();
+
+    super.initState();
+  }
+
+  void initDb() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    emailUser = sharedPreferences.getString(email)!;
+    typeuser = sharedPreferences.getString(userType)!;
+
+    debugPrint("${sharedPreferences.getString(userType)}:Home");
+    if (sharedPreferences.getString(userType) == "admin") {
+      isAdmin = true;
+    } else {
+      isAdmin = false;
+    }
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    //userStorage.isAdmin == true ? isAdmin = true : isAdmin = false;
+
     return Scaffold(
-        drawer: const AppDrawer(),
+        drawer: AppDrawer(email: emailUser, type: userType, isAdmin: isAdmin),
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -53,8 +81,7 @@ class _HomeViewState extends State<HomeView> {
           child: SafeArea(
             child: isAdmin == true
                 //for admin
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                ? ListView(
                     children: [
                       SizedBox(
                           height: pm60,
@@ -72,29 +99,39 @@ class _HomeViewState extends State<HomeView> {
                       const SizedBox(
                         height: pm55,
                       ),
-                      SizedBox(
-                          width: double.infinity,
-                          height: pm55,
-                          child: CustomButton(
-                            title: "Add Building",
-                            tap: () {
-                              goToAddPage(true);
-                            },
-                            isDefault: false,
-                          )),
+                      Obx(() {
+                        return Visibility(
+                          visible: homeController.isThanaSelected.isTrue,
+                          child: SizedBox(
+                              width: double.infinity,
+                              height: pm55,
+                              child: CustomButton(
+                                title: "Add Building",
+                                tap: () {
+                                  goToAddPage(true);
+                                },
+                                isDefault: false,
+                              )),
+                        );
+                      }),
                       const SizedBox(
                         height: pm10,
                       ),
-                      SizedBox(
-                          width: double.infinity,
-                          height: pm55,
-                          child: CustomButton(
-                            title: "Set Assets",
-                            tap: () {
-                              goToAddPage(false);
-                            },
-                            isDefault: false,
-                          )),
+                      Obx(() {
+                        return Visibility(
+                          visible: homeController.isThanaSelected.isTrue,
+                          child: SizedBox(
+                              width: double.infinity,
+                              height: pm55,
+                              child: CustomButton(
+                                title: "Set Assets",
+                                tap: () {
+                                  goToAddPage(false);
+                                },
+                                isDefault: false,
+                              )),
+                        );
+                      }),
                     ],
                   )
 
@@ -116,53 +153,99 @@ class _HomeViewState extends State<HomeView> {
 class AppDrawer extends StatelessWidget {
   const AppDrawer({
     super.key,
+    required this.email,
+    required this.type,
+    required this.isAdmin,
   });
+
+  final String email;
+  final String type;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            color: primaryColor,
-            height: pm30,
-          ),
-          ListTile(
-            leading: CircleAvatar(
-              backgroundColor: whiteColor,
-              child: const Icon(Icons.person),
+    return SizedBox(
+      width: 250,
+      child: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              color: primaryColor,
+              height: pm30,
             ),
-            tileColor: primaryColor,
-            title: Text(
-              "Utsa Chandra",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontSize: pm20),
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: whiteColor,
+                child: const Icon(Icons.person),
+              ),
+              tileColor: primaryColor,
+              title: Text(
+                email.split("@").first,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontSize: pm20),
+              ),
+              subtitle: Text(
+                email,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontSize: pm12),
+              ),
             ),
-            subtitle: Text(
-              "utsa@gmail.com",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontSize: pm12),
+            isAdmin == true
+                ? ListTile(
+                    onTap: () {},
+                    leading: const Icon(
+                      Icons.file_download,
+                      size: 20,
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 20,
+                    ),
+                    title: Text(
+                      "Export",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(fontSize: pm15),
+                    ),
+                  )
+                : const SizedBox(),
+            ListTile(
+              onTap: () async {
+                SharedPreferences preferences =
+                    await SharedPreferences.getInstance();
+
+                preferences.remove(email);
+                preferences.remove(token);
+                preferences.remove(userType);
+                Get.snackbar("Logout", "Successfully Logout",
+                    colorText: whiteColor, backgroundColor: primaryColor);
+                Get.offAllNamed(loginRoute);
+              },
+              leading: const Icon(
+                Icons.logout_outlined,
+                size: 20,
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios_outlined,
+                size: 20,
+              ),
+              title: Text(
+                "Logout",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontSize: pm15),
+              ),
             ),
-          ),
-          ListTile(
-            onTap: () {},
-            leading: const Icon(Icons.file_download),
-            trailing: const Icon(Icons.arrow_forward_ios_outlined),
-            title: Text(
-              "Export",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontSize: pm17),
-            ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -345,6 +428,7 @@ class SuggetionBox extends StatelessWidget {
                 homeController.suggetionBuilding.value = [];
               }
             }
+            homeController.isThanaSelected.value = false;
           },
           clearOnSubmit: false,
           textSubmitted: submit),
@@ -353,9 +437,13 @@ class SuggetionBox extends StatelessWidget {
 
   submit(text) {
     if (hint == "Thana") {
+      homeController.isThanaSelected.value = true;
       homeController.thanaController.value.text = text;
     } else if (hint == "District") {
       homeController.districtController.value.text = text;
+      if (homeController.isThanaSelected.value = true) {
+        homeController.isThanaSelected.value = false;
+      }
     } else if (hint == "Building") {
       homeController.buildingController.value.text = text;
 

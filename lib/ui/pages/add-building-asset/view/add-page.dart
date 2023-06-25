@@ -50,7 +50,10 @@ class AddPage extends StatelessWidget {
             children: [
               Expanded(
                   child: ItemList(
-                      controller: controller, itemList: controller.buildingList
+                      controller: controller,
+                      itemList: controller.routeItemInfo["isBuilding"] == true
+                          ? controller.buildingList
+                          : controller.assetList
                       // controller.routeItemInfo["isBuilding"] == true
                       //     ? controller.buildingList
                       //     : controller.assetList,
@@ -103,11 +106,19 @@ class Addnew extends StatelessWidget {
             TextButton(
                 onPressed: () {
                   //test - create new building
-                  controller.addNewBuilding(
-                      "1",
-                      BuildingModel(
-                          name: controller.textEditingController.text,
-                          active: true));
+
+                  if (controller.routeItemInfo["isBuilding"] == true) {
+                    controller.addNewBuilding(
+                        "1",
+                        BuildingModel(
+                            name: controller.textEditingController.text,
+                            active: true));
+                  } else {
+                    controller.addNewAsset(BuildingModel(
+                        name: controller.textEditingController.text,
+                        active: true));
+                  }
+
                   // Random random = Random();
 
                   // controller.addItem(ItemModel(
@@ -204,7 +215,12 @@ class ItemWidget extends StatelessWidget {
               child: IconButton(
                   onPressed: () {
                     // controller.removeItem(item);
-                    controller.deleteBuilding("1", item.id.toString());
+
+                    if (controller.routeItemInfo["isBuilding"] == true) {
+                      controller.deleteBuilding("1", item.id.toString());
+                    } else {
+                      controller.deleteAsset(item.id.toString());
+                    }
                   },
                   icon: Icon(
                     Icons.delete_outline,

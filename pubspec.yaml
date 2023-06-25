@@ -54,6 +54,8 @@ dev_dependencies:
 
   image_cropping: ^0.0.13
   http: ^0.13.6
+  get_storage: ^2.1.1
+  shared_preferences: ^2.1.2
   # image_cropper: ^4.0.1
 
 # For information on the generic Dart part of this file, see the

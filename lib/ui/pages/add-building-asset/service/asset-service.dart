@@ -10,11 +10,10 @@ import "package:inventory_mangament_app/ui/pages/add-building-asset/model/buildi
 import "package:inventory_mangament_app/ui/pages/add-building-asset/model/building-model.dart";
 import "package:inventory_mangament_app/ui/pages/add-building-asset/model/error-response-model.dart";
 
-class BuildingService {
-  static Future<bool> addBuilding(String thanaId, BuildingModel data) async {
+class AssetService {
+  static Future<bool> addAsset(BuildingModel data) async {
     //var response;
-    String url =
-        "http://192.168.0.101:5000/api/admin/projects/1/thanas/$thanaId/buildings/";
+    String url = "http://192.168.0.101:5000/api/admin/assets";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -49,11 +48,9 @@ class BuildingService {
     }
   }
 
-  static Future<List<BuildingCreateResponseModel>> allBuildign(
-      String thanaId) async {
+  static Future<List<BuildingCreateResponseModel>> allAsset() async {
     //var response;
-    String url =
-        "http://192.168.0.101:5000/api/admin/projects/1/thanas/$thanaId/buildings/";
+    String url = "http://192.168.0.101:5000/api/admin/assets";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -102,10 +99,9 @@ class BuildingService {
     }
   }
 
-  static Future<bool> deleteBuilding(String thanaId, String buildingId) async {
+  static Future<bool> deleteAsset(String assetId) async {
     //var response;
-    String url =
-        "http://192.168.0.101:5000/api/admin/projects/1/thanas/$thanaId/buildings/$buildingId";
+    String url = "http://192.168.0.101:5000/api/admin/assets/$assetId";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',

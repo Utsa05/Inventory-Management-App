@@ -5,6 +5,10 @@ import 'package:get/get.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/view/assets-page.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/controller/floor-room-controller.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-model.dart';
+import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-request-model.dart';
+import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-response-model.dart';
+import 'package:inventory_mangament_app/ui/pages/floor-room/model/room-request-model.dart';
+import 'package:inventory_mangament_app/ui/pages/floor-room/model/room-response-model.dart';
 import '../../../../constatns/color.dart';
 import '../../../../constatns/pm.dart';
 import '../../../../constatns/string.dart';
@@ -101,13 +105,20 @@ class Addnew extends StatelessWidget {
             ),
             TextButton(
                 onPressed: () {
-                  Random random = Random();
+                  // Random random = Random();
 
-                  controller.addItem(ItemModel(
-                      title: controller.textEditingController.text,
-                      district: controller.routeItemInfo.district!,
-                      thana: controller.routeItemInfo.thane!,
-                      id: random.nextInt(10000)));
+                  // controller.addItem(ItemModel(
+                  //     title: controller.textEditingController.text,
+                  //     district: controller.routeItemInfo.district!,
+                  //     thana: controller.routeItemInfo.thane!,
+                  //     id: random.nextInt(10000)));
+
+                  controller.addNewFloor(
+                      "63",
+                      FloorRequestModel(
+                          name: controller.textEditingController.text,
+                          active: true,
+                          buildingId: 63));
 
                   controller.textEditingController.clear();
                 },
@@ -131,7 +142,7 @@ class ItemList extends StatelessWidget {
     required this.itemList,
     required this.controller,
   });
-  final List<ItemModel> itemList;
+  final List<FloorResponseModel> itemList;
   final FloorRoomController controller;
 
   @override
@@ -141,7 +152,7 @@ class ItemList extends StatelessWidget {
           ? ListView.builder(
               itemCount: itemList.length,
               itemBuilder: (context, index) {
-                ItemModel item = itemList[index];
+                FloorResponseModel item = itemList[index];
                 return ItemWidget(item: item, controller: controller);
               },
             )
@@ -160,7 +171,7 @@ class ItemWidget extends StatelessWidget {
     required this.controller,
   });
 
-  final ItemModel item;
+  final FloorResponseModel item;
   final FloorRoomController controller;
 
   @override
@@ -178,13 +189,13 @@ class ItemWidget extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                controller.routeItemInfo.floorNo = item.title;
+                controller.routeItemInfo.floorNo = item.name;
                 Get.to(const RoomView(),
                     arguments: controller.routeItemInfo,
                     transition: Transition.rightToLeftWithFade);
               },
               child: Text(
-                "Floor ${item.title}",
+                "Floor ${item.name}",
                 style: Theme.of(context)
                     .textTheme
                     .displaySmall!
@@ -200,7 +211,7 @@ class ItemWidget extends StatelessWidget {
               backgroundColor: blueColor,
               child: IconButton(
                   onPressed: () {
-                    controller.routeItemInfo.floorNo = item.title;
+                    controller.routeItemInfo.floorNo = item.name;
                     Get.to(const RoomView(),
                         arguments: controller.routeItemInfo,
                         transition: Transition.rightToLeftWithFade);
@@ -218,7 +229,8 @@ class ItemWidget extends StatelessWidget {
               backgroundColor: Colors.red,
               child: IconButton(
                   onPressed: () {
-                    controller.removeItem(item);
+                    controller.deleteBuilding(
+                        item.id.toString(), item.buildingId.toString());
                   },
                   icon: Icon(
                     Icons.delete_outline,
@@ -238,6 +250,7 @@ class RoomView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final FloorRoomController controller = Get.put(FloorRoomController());
+    controller.getRoom("10");
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -300,7 +313,7 @@ class ItemRoomWidget extends StatelessWidget {
     required this.controller,
   });
 
-  final ItemModel item;
+  final RoomResponseModel item;
   final FloorRoomController controller;
 
   @override
@@ -318,14 +331,14 @@ class ItemRoomWidget extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                controller.routeItemInfo.roomNo = item.title;
+                controller.routeItemInfo.roomNo = item.name;
                 Get.toNamed(
                   assetLIstRoute,
                   arguments: controller.routeItemInfo,
                 );
               },
               child: Text(
-                "Room ${item.title}",
+                "Room ${item.name}",
                 style: Theme.of(context)
                     .textTheme
                     .displaySmall!
@@ -341,7 +354,7 @@ class ItemRoomWidget extends StatelessWidget {
               backgroundColor: blueColor,
               child: IconButton(
                   onPressed: () {
-                    controller.routeItemInfo.roomNo = item.title;
+                    controller.routeItemInfo.roomNo = item.name;
                     Get.toNamed(
                       assetLIstRoute,
                       arguments: controller.routeItemInfo,
@@ -360,7 +373,8 @@ class ItemRoomWidget extends StatelessWidget {
               backgroundColor: Colors.red,
               child: IconButton(
                   onPressed: () {
-                    controller.removeRoomItem(item);
+                    controller.deleteRoom(
+                        item.floorId.toString(), item.id.toString());
                   },
                   icon: Icon(
                     Icons.delete_outline,
@@ -409,13 +423,12 @@ class AddRoomnew extends StatelessWidget {
             ),
             TextButton(
                 onPressed: () {
-                  Random random = Random();
-
-                  controller.addRoomItem(ItemModel(
-                      title: controller.textEditingController.text,
-                      district: controller.routeItemInfo.district!,
-                      thana: controller.routeItemInfo.thane!,
-                      id: random.nextInt(10000)));
+                  controller.addNewRoom(
+                      "10",
+                      RoomRequestModel(
+                          name: controller.textEditingController.text,
+                          active: true,
+                          floorId: 10));
 
                   controller.textEditingController.clear();
                 },
@@ -439,7 +452,7 @@ class ItemRoomList extends StatelessWidget {
     required this.itemList,
     required this.controller,
   });
-  final List<ItemModel> itemList;
+  final List<RoomResponseModel> itemList;
   final FloorRoomController controller;
 
   @override
@@ -449,7 +462,7 @@ class ItemRoomList extends StatelessWidget {
           ? ListView.builder(
               itemCount: itemList.length,
               itemBuilder: (context, index) {
-                ItemModel item = itemList[index];
+                RoomResponseModel item = itemList[index];
                 return ItemRoomWidget(item: item, controller: controller);
               },
             )
