@@ -31,7 +31,7 @@ const String retake = "Retake";
 const String setAssetDetail = "Set Asset Details";
 const String initialTagno = "Initial Tag No";
 const String remarkNote = "Remarks/Note";
-const String addNewAsset = "Add New Asset";
+const String addNewAsset = "Add or Show Asset";
 const String showAssetList = "Show Asset List";
 //route
 const String initialRoute = "/";

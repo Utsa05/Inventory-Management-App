@@ -13,8 +13,7 @@ import "package:inventory_mangament_app/ui/pages/add-building-asset/model/error-
 class BuildingService {
   static Future<bool> addBuilding(String thanaId, BuildingModel data) async {
     //var response;
-    String url =
-        "http://192.168.0.101:5000/api/admin/projects/1/thanas/$thanaId/buildings/";
+    String url = "${globalUrl}admin/projects/1/thanas/$thanaId/buildings/";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -52,8 +51,7 @@ class BuildingService {
   static Future<List<BuildingCreateResponseModel>> allBuildign(
       String thanaId) async {
     //var response;
-    String url =
-        "http://192.168.0.101:5000/api/admin/projects/1/thanas/$thanaId/buildings/";
+    String url = "${globalUrl}admin/projects/1/thanas/$thanaId/buildings/";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -105,7 +103,7 @@ class BuildingService {
   static Future<bool> deleteBuilding(String thanaId, String buildingId) async {
     //var response;
     String url =
-        "http://192.168.0.101:5000/api/admin/projects/1/thanas/$thanaId/buildings/$buildingId";
+        "${globalUrl}admin/projects/1/thanas/$thanaId/buildings/$buildingId";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',

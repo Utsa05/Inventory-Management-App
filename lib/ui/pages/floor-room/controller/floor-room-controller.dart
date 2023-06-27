@@ -108,7 +108,7 @@ class FloorRoomController extends GetxController {
 
   @override
   void onInit() {
-    getFloor("63");
+    getFloor("62");
     super.onInit();
   }
 }

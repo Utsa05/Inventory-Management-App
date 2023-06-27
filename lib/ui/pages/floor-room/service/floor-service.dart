@@ -5,6 +5,7 @@ import "dart:io";
 
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
+import "package:inventory_mangament_app/constatns/api.dart";
 
 import "package:inventory_mangament_app/ui/pages/add-building-asset/model/error-response-model.dart";
 import "package:inventory_mangament_app/ui/pages/floor-room/model/floor-request-model.dart";
@@ -14,8 +15,7 @@ class FloorService {
   static Future<bool> addFloor(
       String buildingId, FloorRequestModel data) async {
     //var response;
-    String url =
-        "http://192.168.0.101:5000/api/user/buildings/$buildingId/floors/";
+    String url = "${globalUrl}user/buildings/$buildingId/floors/";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -52,8 +52,7 @@ class FloorService {
 
   static Future<List<FloorResponseModel>> allBuildign(String buildingId) async {
     //var response;
-    String url =
-        "http://192.168.0.101:5000/api/user/buildings/$buildingId/floors/";
+    String url = "${globalUrl}user/buildings/$buildingId/floors/";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -104,8 +103,7 @@ class FloorService {
 
   static Future<bool> deleteFloor(String floorId, String buildingId) async {
     //var response;
-    String url =
-        "http://192.168.0.101:5000/api/user/buildings/$buildingId/floors/$floorId";
+    String url = "${globalUrl}user/buildings/$buildingId/floors/$floorId";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',

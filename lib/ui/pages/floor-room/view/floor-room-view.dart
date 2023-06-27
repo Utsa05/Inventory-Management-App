@@ -105,7 +105,7 @@ class Addnew extends StatelessWidget {
             ),
             TextButton(
                 onPressed: () {
-                  // Random random = Random();
+                  // Random random = Random();p
 
                   // controller.addItem(ItemModel(
                   //     title: controller.textEditingController.text,
@@ -114,7 +114,7 @@ class Addnew extends StatelessWidget {
                   //     id: random.nextInt(10000)));
 
                   controller.addNewFloor(
-                      "63",
+                      "62",
                       FloorRequestModel(
                           name: controller.textEditingController.text,
                           active: true,
@@ -250,7 +250,7 @@ class RoomView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final FloorRoomController controller = Get.put(FloorRoomController());
-    controller.getRoom("10");
+    controller.getRoom("15");
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -424,7 +424,7 @@ class AddRoomnew extends StatelessWidget {
             TextButton(
                 onPressed: () {
                   controller.addNewRoom(
-                      "10",
+                      "15",
                       RoomRequestModel(
                           name: controller.textEditingController.text,
                           active: true,

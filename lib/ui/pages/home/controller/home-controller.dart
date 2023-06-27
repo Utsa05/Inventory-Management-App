@@ -18,6 +18,8 @@ class HomeController extends GetxController {
   var thanaController = TextEditingController().obs;
   var buildingController = TextEditingController().obs;
   var isThanaSelected = false.obs;
+  var isBuilding = false.obs;
+
   GlobalKey<AutoCompleteTextFieldState<String>> key1 = GlobalKey();
   GlobalKey<AutoCompleteTextFieldState<String>> key2 = GlobalKey();
   var selectedDistrictId = "none".obs;

@@ -261,8 +261,7 @@ class UserPortion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+    return ListView(
       children: [
         const SizedBox(
           height: pm20,
@@ -313,22 +312,29 @@ class UserPortion extends StatelessWidget {
         const SizedBox(
           height: pm22,
         ),
-        SizedBox(
-          width: double.infinity,
-          height: pm50,
-          child: CustomButton(
-            title: "Set Floor",
-            tap: () {
-              Get.toNamed(floorroomRoute,
-                  arguments: FloorRouteMotel(
-                      buildingId: homeController.selectedBuildingId.value,
-                      district: homeController.districtController.value.text,
-                      thane: homeController.thanaController.value.text,
-                      building: homeController.buildingController.value.text));
-            },
-            isDefault: false,
-          ),
-        )
+        Obx(() {
+          return homeController.isBuilding.value == true
+              ? SizedBox(
+                  width: double.infinity,
+                  height: pm50,
+                  child: CustomButton(
+                    title: "Set Floor",
+                    tap: () {
+                      Get.toNamed(floorroomRoute,
+                          arguments: FloorRouteMotel(
+                              buildingId:
+                                  homeController.selectedBuildingId.value,
+                              district:
+                                  homeController.districtController.value.text,
+                              thane: homeController.thanaController.value.text,
+                              building: homeController
+                                  .buildingController.value.text));
+                    },
+                    isDefault: false,
+                  ),
+                )
+              : const SizedBox();
+        })
       ],
     );
   }
@@ -429,6 +435,7 @@ class SuggetionBox extends StatelessWidget {
               }
             }
             homeController.isThanaSelected.value = false;
+            homeController.isBuilding.value = false;
           },
           clearOnSubmit: false,
           textSubmitted: submit),
@@ -443,9 +450,11 @@ class SuggetionBox extends StatelessWidget {
       homeController.districtController.value.text = text;
       if (homeController.isThanaSelected.value = true) {
         homeController.isThanaSelected.value = false;
+        homeController.isBuilding.value = false;
       }
     } else if (hint == "Building") {
       homeController.buildingController.value.text = text;
+      homeController.isBuilding.value = true;
 
       for (var item in homeController.buildingModelList) {
         if (item.name == text) {

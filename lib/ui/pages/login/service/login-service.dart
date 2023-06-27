@@ -6,6 +6,7 @@ import "dart:io";
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import 'package:get/get.dart';
+import "package:inventory_mangament_app/constatns/api.dart";
 import "package:inventory_mangament_app/ui/pages/add-building-asset/model/error-response-model.dart";
 import "package:inventory_mangament_app/ui/pages/login/controller/login-controller.dart";
 import "package:inventory_mangament_app/ui/pages/login/model/login-request-model.dart";
@@ -14,7 +15,7 @@ import "package:inventory_mangament_app/ui/pages/login/model/login-response-mode
 class LoginService {
   static Future<LoginResponseModel> loginUser(LoginRequestModel data) async {
     //var response;
-    String url = "http://192.168.0.101:5000/api/auth/login";
+    String url = "${globalUrl}auth/login";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',

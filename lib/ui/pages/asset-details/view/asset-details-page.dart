@@ -6,6 +6,8 @@ import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/constatns/pm.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/controller/asset-list-controller.dart';
+import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-request-model.dart';
+import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-model.dart';
 import 'package:inventory_mangament_app/ui/widgets/custom-button.dart';
 import 'package:inventory_mangament_app/ui/widgets/text-box.dart';
 
@@ -16,6 +18,8 @@ class AssetDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final AssetListController assetListController =
         Get.put(AssetListController());
+
+    assetListController.isAlreadyAddedAsset.value = false;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -36,12 +40,12 @@ class AssetDetailsPage extends StatelessWidget {
                 image: AssetImage('assets/images/bgimg.png'),
                 fit: BoxFit.cover)),
         child: SafeArea(
-          child: Column(
+          child: ListView(
             children: [
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "${assetListController.routeInfo.district}> ${assetListController.routeInfo.thane}> ${assetListController.routeInfo.building}> ${assetListController.routeInfo.floorNo}> ${assetListController.routeInfo.roomNo}>",
+                  "${assetListController.routeInfo.district}> ${assetListController.routeInfo.thane}> ${assetListController.routeInfo.building}> ${assetListController.routeInfo.floorNo}> ${assetListController.routeInfo.roomNo}",
                   style: Theme.of(context)
                       .textTheme
                       .displayMedium!
@@ -82,7 +86,7 @@ class AssetDetailsPage extends StatelessWidget {
               ),
               CustomTextBox(
                 hint: initialTagno,
-                controller: TextEditingController(),
+                controller: assetListController.initialTextController.value,
                 isNotCirle: true,
               ),
               const SizedBox(
@@ -91,18 +95,60 @@ class AssetDetailsPage extends StatelessWidget {
               CustomTextBox(
                 line: 2,
                 hint: remarkNote,
-                controller: TextEditingController(),
+                controller: assetListController.remarkTextController.value,
                 isNotCirle: true,
               ),
               const SizedBox(
                 height: pm10,
               ),
-              CustomButton(
-                  title: save,
-                  tap: () {
-                    assetListController.isAlreadyAddedAsset(true);
-                  }),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Obx(() {
+                  return assetListController.isLoading.value == false
+                      ? CustomButton(
+                          title: save,
+                          tap: () {
+                            if (assetListController
+                                .initialTextController.value.text.isEmpty) {
+                              Get.snackbar(
+                                  'Empty', "Initial tag no cannot be emmpty",
+                                  colorText: whiteColor,
+                                  backgroundColor: Colors.red);
+                            } else if (assetListController
+                                .remarkTextController.value.text.isEmpty) {
+                              Get.snackbar('Empty', "Remarks cannot be emmpty",
+                                  colorText: whiteColor,
+                                  backgroundColor: Colors.red);
+                            } else {
+                              FloorRouteMotel assetInfo =
+                                  assetListController.routeInfo;
+                              assetListController.addNewAssetDetails(
+                                  //room id
+                                  "9",
+                                  AssetRequestModel(
+                                      name: assetInfo.assetName!,
+                                      gpsLatitude: "121212",
+                                      gpsLongitude: "2323",
+                                      date: DateTime.now(),
+                                      imageUrl: assetInfo.imageUrl!,
+                                      initialTag: assetListController
+                                          .initialTextController.value.text,
+                                      remarks: assetListController
+                                          .remarkTextController.value.text,
+                                      asset: Asset(id: 10)));
+                            }
+                          })
+                      : CustomButton(
+                          tap: () {},
+                          title: save,
+                          isLoadingButton: true,
+                        );
+                }),
+              ),
               const Expanded(child: SizedBox()),
+              const SizedBox(
+                height: 30,
+              ),
               Obx(() {
                 return Visibility(
                   visible: assetListController.isAlreadyAddedAsset.value,
@@ -123,23 +169,23 @@ class AssetDetailsPage extends StatelessWidget {
                             needBgColorChnage: true,
                             title: addNewAsset,
                             tap: () {
-                              assetListController.captureImage(context);
+                              Navigator.of(context).pop();
                             },
                             isDefault: false,
                           ),
                         ),
-                        const SizedBox(
-                          height: pm10,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: CustomButton(
-                            needBgColorChnage: true,
-                            title: showAssetList,
-                            tap: () {},
-                            isDefault: false,
-                          ),
-                        ),
+                        // const SizedBox(
+                        //   height: pm10,
+                        // ),
+                        // SizedBox(
+                        //   width: double.infinity,
+                        //   child: CustomButton(
+                        //     needBgColorChnage: true,
+                        //     title: showAssetList,
+                        //     tap: () {},
+                        //     isDefault: false,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
