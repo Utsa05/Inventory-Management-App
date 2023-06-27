@@ -1,12 +1,15 @@
 import 'dart:math';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
+import 'package:inventory_mangament_app/constatns/warning-dialog.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/controller/asset-list-controller.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-details-response-model.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-model.dart';
+import 'package:inventory_mangament_app/ui/widgets/custom-button.dart';
 import '../../../../constatns/color.dart';
 import '../../../../constatns/pm.dart';
 import '../../add-building-asset/model/item-model.dart';
@@ -73,13 +76,17 @@ class AssetList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Obx(() => assetListController.isLoading.value == false
-          ? ListView.builder(
-              itemCount: assetListController.assetDetailsList.length,
-              itemBuilder: (context, index) {
-                AssetDetailsResponseModel item =
-                    assetListController.assetDetailsList[index];
-                return AssetDetailsItem(item: item);
-              })
+          ? assetListController.assetDetailsList.isNotEmpty
+              ? ListView.builder(
+                  itemCount: assetListController.assetDetailsList.length,
+                  itemBuilder: (context, index) {
+                    AssetDetailsResponseModel item =
+                        assetListController.assetDetailsList[index];
+                    return AssetDetailsItem(item: item);
+                  })
+              : const Center(
+                  child: Text("Not have any item"),
+                )
           : const Center(
               child: CircularProgressIndicator(),
             )),
@@ -180,8 +187,12 @@ class AssetDetailsItem extends StatelessWidget {
                     IconButton(
                         splashRadius: 10,
                         onPressed: () {
-                          Get.put(AssetListController())
-                              .deleteBuilding("9", item.id.toString());
+                          final controller = Get.put(AssetListController());
+
+                          warningDialog(context, () {
+                            controller.deleteBuilding("9", item.id.toString());
+                            Navigator.of(context).pop();
+                          });
                         },
                         icon: const Icon(
                           Icons.delete_outline,

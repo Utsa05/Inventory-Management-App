@@ -2,7 +2,6 @@
 //
 //     final loginRequestModel = loginRequestModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 LoginRequestModel loginRequestModelFromJson(String str) =>

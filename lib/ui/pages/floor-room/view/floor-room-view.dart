@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_mangament_app/constatns/warning-dialog.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/view/assets-page.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/controller/floor-room-controller.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-model.dart';
@@ -12,7 +13,6 @@ import 'package:inventory_mangament_app/ui/pages/floor-room/model/room-response-
 import '../../../../constatns/color.dart';
 import '../../../../constatns/pm.dart';
 import '../../../../constatns/string.dart';
-import '../../add-building-asset/model/item-model.dart';
 
 class FloorRoomVew extends StatelessWidget {
   const FloorRoomVew({super.key, required this.floorRouteMotel});
@@ -148,17 +148,21 @@ class ItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return itemList.isNotEmpty
-          ? ListView.builder(
-              itemCount: itemList.length,
-              itemBuilder: (context, index) {
-                FloorResponseModel item = itemList[index];
-                return ItemWidget(item: item, controller: controller);
-              },
-            )
-          : const Align(
-              alignment: Alignment.center,
-              child: Text("Not have Any Item"),
+      return controller.isLoading.value == false
+          ? itemList.isNotEmpty
+              ? ListView.builder(
+                  itemCount: itemList.length,
+                  itemBuilder: (context, index) {
+                    FloorResponseModel item = itemList[index];
+                    return ItemWidget(item: item, controller: controller);
+                  },
+                )
+              : const Align(
+                  alignment: Alignment.center,
+                  child: Text("Not have Any Item"),
+                )
+          : const Center(
+              child: CircularProgressIndicator(),
             );
     });
   }
@@ -190,6 +194,7 @@ class ItemWidget extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 controller.routeItemInfo.floorNo = item.name;
+                controller.getRoom("15");
                 Get.to(const RoomView(),
                     arguments: controller.routeItemInfo,
                     transition: Transition.rightToLeftWithFade);
@@ -229,8 +234,11 @@ class ItemWidget extends StatelessWidget {
               backgroundColor: Colors.red,
               child: IconButton(
                   onPressed: () {
-                    controller.deleteBuilding(
-                        item.id.toString(), item.buildingId.toString());
+                    warningDialog(context, () {
+                      controller.deleteBuilding(
+                          item.id.toString(), item.buildingId.toString());
+                      Navigator.of(context).pop();
+                    });
                   },
                   icon: Icon(
                     Icons.delete_outline,
@@ -244,13 +252,23 @@ class ItemWidget extends StatelessWidget {
 }
 
 //for room - view
-class RoomView extends StatelessWidget {
+class RoomView extends StatefulWidget {
   const RoomView({super.key});
 
   @override
+  State<RoomView> createState() => _RoomViewState();
+}
+
+class _RoomViewState extends State<RoomView> {
+  final FloorRoomController controller = Get.put(FloorRoomController());
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final FloorRoomController controller = Get.put(FloorRoomController());
-    controller.getRoom("15");
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -373,8 +391,11 @@ class ItemRoomWidget extends StatelessWidget {
               backgroundColor: Colors.red,
               child: IconButton(
                   onPressed: () {
-                    controller.deleteRoom(
-                        item.floorId.toString(), item.id.toString());
+                    warningDialog(context, () {
+                      controller.deleteRoom(
+                          item.floorId.toString(), item.id.toString());
+                      Navigator.of(context).pop();
+                    });
                   },
                   icon: Icon(
                     Icons.delete_outline,

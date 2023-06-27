@@ -1,16 +1,14 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
 import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/constatns/pm.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/ui/pages/registration/controller/register-controller.dart';
 
 import '../../../widgets/custom-button.dart';
 import '../../../widgets/text-box.dart';
-import 'package:get/get.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({super.key});
@@ -80,7 +78,7 @@ class RegisterView extends StatelessWidget {
                 }),
               ),
               const SizedBox(
-                height: pm40,
+                height: pm65,
               ),
               const DonotHaveAnAccount()
             ],
@@ -108,7 +106,7 @@ class ScreenTitle extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .displaySmall!
-            .copyWith(fontSize: pm24, fontWeight: FontWeight.w700),
+            .copyWith(fontSize: pm20, fontWeight: FontWeight.w700),
       ),
     );
   }
@@ -128,7 +126,7 @@ class Title extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .displaySmall!
-            .copyWith(fontSize: pm35, fontWeight: FontWeight.w500),
+            .copyWith(fontSize: pm26, fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -171,7 +169,7 @@ class DonotHaveAnAccount extends StatelessWidget {
           TextSpan(
               text: alreadyHavaAccount,
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    fontSize: pm17,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
               children: [

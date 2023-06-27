@@ -1,10 +1,10 @@
-import 'dart:convert';
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
 import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/constatns/pm.dart';
-import 'package:inventory_mangament_app/constatns/storage.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
+import 'package:inventory_mangament_app/constatns/warning-dialog.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-model.dart';
 import 'package:inventory_mangament_app/ui/pages/home/controller/home-controller.dart';
 import 'package:inventory_mangament_app/ui/widgets/custom-button.dart';
@@ -218,15 +218,19 @@ class AppDrawer extends StatelessWidget {
                 : const SizedBox(),
             ListTile(
               onTap: () async {
-                SharedPreferences preferences =
-                    await SharedPreferences.getInstance();
+                Navigator.of(context).pop();
+                warningDialog(context, () async {
+                  SharedPreferences preferences =
+                      await SharedPreferences.getInstance();
 
-                preferences.remove(email);
-                preferences.remove(token);
-                preferences.remove(userType);
-                Get.snackbar("Logout", "Successfully Logout",
-                    colorText: whiteColor, backgroundColor: primaryColor);
-                Get.offAllNamed(loginRoute);
+                  preferences.remove(email);
+                  preferences.remove(token);
+                  preferences.remove(userType);
+                  Get.snackbar("Logout", "Successfully Logout",
+                      colorText: whiteColor, backgroundColor: Colors.green);
+                  Get.offAllNamed(loginRoute);
+                  Navigator.of(context).pop();
+                });
               },
               leading: const Icon(
                 Icons.logout_outlined,

@@ -82,7 +82,8 @@ class AssetListController extends GetxController {
     print(assetDetailsList.length);
   }
 
-  void addNewAssetDetails(String roomId, AssetRequestModel data) async {
+  void addNewAssetDetails(
+      String roomId, AssetRequestModel data, BuildContext context) async {
     isLoading.value = true;
 
     await AssetDetailsService.addAssetDetail(roomId, data);
@@ -97,6 +98,8 @@ class AssetListController extends GetxController {
     isLoading.value = false;
     assetDetailsList.value = list;
     isAlreadyAddedAsset(true);
+
+    Navigator.of(context).pop();
     initialTextController.value.clear();
     remarkTextController.value.clear();
     print(assetDetailsList.length);

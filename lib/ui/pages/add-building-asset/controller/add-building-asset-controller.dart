@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-model.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/item-model.dart';
@@ -53,6 +54,8 @@ class AddBuildingAssetController extends GetxController {
     //buildingList.add(building!);
     isLoading.value = false;
     buildingList.value = list;
+    Get.snackbar("Added", "Successfully Added",
+        colorText: whiteColor, backgroundColor: Colors.green);
     print(buildingList.length);
   }
 
@@ -62,6 +65,9 @@ class AddBuildingAssetController extends GetxController {
 
     if (isDeleted) {
       getBuilding();
+
+      Get.snackbar("Deleted", "Successfully Deleted",
+          colorText: whiteColor, backgroundColor: Colors.green);
     }
     isLoading(false);
   }
@@ -91,6 +97,9 @@ class AddBuildingAssetController extends GetxController {
     print(assetList.length);
     //buildingList.add(building!);
     isLoading.value = false;
+
+    Get.snackbar("Added", "Successfully Added",
+        colorText: whiteColor, backgroundColor: Colors.green);
     assetList.value = list;
     print(assetList.length);
   }
@@ -100,6 +109,8 @@ class AddBuildingAssetController extends GetxController {
     bool isDeleted = await AssetService.deleteAsset(assetId);
 
     if (isDeleted) {
+      Get.snackbar("Deleted", "Successfully Deleted",
+          colorText: whiteColor, backgroundColor: Colors.green);
       getAssets();
     }
     isLoading(false);

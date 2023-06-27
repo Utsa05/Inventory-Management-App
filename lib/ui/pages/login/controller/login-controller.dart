@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/constatns/storage.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/ui/pages/login/model/login-request-model.dart';
@@ -15,9 +16,10 @@ class LoignController extends GetxController {
   void doValidateUser() {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       Get.snackbar("Empty", "Field cannot be emtpy",
-          backgroundColor: Colors.red);
+          backgroundColor: Colors.red, colorText: whiteColor);
     } else if (!emailController.text.isEmail) {
-      Get.snackbar("Invalid", "Invalid Email", backgroundColor: Colors.red);
+      Get.snackbar("Invalid", "Invalid Email",
+          backgroundColor: Colors.red, colorText: whiteColor);
     } else if (passwordController.text.length < 8) {
       Get.snackbar("Invalid", "Invalid password lenght");
     } else {
@@ -31,8 +33,8 @@ class LoignController extends GetxController {
     isLoading.value = true;
     LoginResponseModel response = await LoginService.loginUser(data);
     if (response.message == "User was logged in successfully!") {
-      Get.snackbar("Congress", "Successfully Registerd",
-          backgroundColor: Colors.green);
+      Get.snackbar("Congress", "Successfully Logged In",
+          backgroundColor: Colors.green, colorText: Colors.white);
       UserStorage storage = UserStorage();
       storage.setEmail(emailController.text);
       storage.setUserToken(response.data.token);
@@ -44,7 +46,12 @@ class LoignController extends GetxController {
       Get.offAllNamed(homeRoute);
     } else {
       isLoading.value = false;
-      Get.snackbar("Wrong", "User Not Found", backgroundColor: Colors.red);
+      Get.snackbar(
+        "Wrong",
+        "User Not Found",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
     isLoading.value = false;
   }

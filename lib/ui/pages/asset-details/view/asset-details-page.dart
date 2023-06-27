@@ -86,6 +86,7 @@ class AssetDetailsPage extends StatelessWidget {
               ),
               CustomTextBox(
                 hint: initialTagno,
+                type: TextInputType.number,
                 controller: assetListController.initialTextController.value,
                 isNotCirle: true,
               ),
@@ -93,7 +94,7 @@ class AssetDetailsPage extends StatelessWidget {
                 height: pm10,
               ),
               CustomTextBox(
-                line: 2,
+                line: 3,
                 hint: remarkNote,
                 controller: assetListController.remarkTextController.value,
                 isNotCirle: true,
@@ -135,7 +136,8 @@ class AssetDetailsPage extends StatelessWidget {
                                           .initialTextController.value.text,
                                       remarks: assetListController
                                           .remarkTextController.value.text,
-                                      asset: Asset(id: 10)));
+                                      asset: Asset(id: 10)),
+                                  context);
                             }
                           })
                       : CustomButton(

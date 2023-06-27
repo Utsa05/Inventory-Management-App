@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 const List buildingListJson = [
   {"id": "1", "thana_id": "311", "name": "Asura"},
   {"id": "2", "thana_id": "311", "name": "Bsura"},

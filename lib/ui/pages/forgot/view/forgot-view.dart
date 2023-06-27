@@ -1,10 +1,9 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
 import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/constatns/pm.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
 
 import '../../../widgets/custom-button.dart';
