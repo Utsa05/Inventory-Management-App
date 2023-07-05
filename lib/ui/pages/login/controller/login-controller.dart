@@ -6,6 +6,7 @@ import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/ui/pages/login/model/login-request-model.dart';
 import 'package:inventory_mangament_app/ui/pages/login/model/login-response-model.dart';
 import 'package:inventory_mangament_app/ui/pages/login/service/login-service.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LoignController extends GetxController {
   var isLoading = false.obs;
@@ -38,7 +39,10 @@ class LoignController extends GetxController {
       UserStorage storage = UserStorage();
       storage.setEmail(emailController.text);
       storage.setUserToken(response.data.token);
-      if (passwordController.text.toLowerCase() == "admin1234") {
+      String token = response.data.token;
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      String role = decodedToken['role'];
+      if (role == "admin") {
         storage.setUserType("admin");
       } else {
         storage.setUserType("user");
