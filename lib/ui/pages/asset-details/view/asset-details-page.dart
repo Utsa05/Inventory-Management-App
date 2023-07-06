@@ -58,24 +58,20 @@ class AssetDetailsPage extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
-                  height: 70,
-                  width: 70,
+                  height: 200,
+                  width: 200,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(pm15),
                       color: whiteColor),
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(pm15),
-                        child: Image.file(
-                          File(assetListController.pickedFile.value.path),
-                          height: 100,
-                          width: 00,
-                          fit: BoxFit.cover,
-                        ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(pm15),
+                      child: Image.file(
+                        File(assetListController.pickedFile.value.path),
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -140,7 +136,9 @@ class AssetDetailsPage extends StatelessWidget {
                                           .initialTextController.value.text,
                                       remarks: assetListController
                                           .remarkTextController.value.text,
-                                      asset: Asset(id: 10)),
+                                      asset: Asset(
+                                          id: int.parse(assetListController
+                                              .selectedAssetId.value))),
                                   context);
                             }
                           })
@@ -151,7 +149,6 @@ class AssetDetailsPage extends StatelessWidget {
                         );
                 }),
               ),
-              const Expanded(child: SizedBox()),
               const SizedBox(
                 height: 30,
               ),

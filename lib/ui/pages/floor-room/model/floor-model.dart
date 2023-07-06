@@ -17,7 +17,8 @@ class FloorRouteMotel {
       this.roomNo,
       this.imageUrl,
       this.assetName,
-      this.roomId});
+      this.roomId,
+      this.floorId});
 
   String? buildingId;
   String? thane;
@@ -28,6 +29,7 @@ class FloorRouteMotel {
   String? imageUrl;
   String? assetName;
   String? roomId;
+  String? floorId;
 
   factory FloorRouteMotel.fromJson(Map<String, dynamic> json) =>
       FloorRouteMotel(
@@ -40,6 +42,7 @@ class FloorRouteMotel {
         imageUrl: json["imageUrl"],
         assetName: json["assetName"],
         roomId: json["roomId"],
+        floorId: json["floorId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,5 +55,6 @@ class FloorRouteMotel {
         "imageUrl": imageUrl,
         "assetName": assetName,
         "roomId": roomId,
+        "floorId": floorId,
       };
 }

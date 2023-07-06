@@ -38,6 +38,7 @@ class AssetListController extends GetxController {
   var assetListOnline = <BuildingCreateResponseModel>[].obs;
 
   var selectedDropdownVlaue = "".obs;
+  var selectedAssetId = "".obs;
 
   var isLoading = false.obs;
   Rx<Position>? currentPosition = const Position(
@@ -69,6 +70,13 @@ class AssetListController extends GetxController {
 
   void changeDropdownValue(String val) {
     selectedDropdownVlaue.value = val;
+    for (var element in assetListOnline) {
+      if (element.name == val) {
+        print("Selcted ID:${element.id}");
+        selectedAssetId.value = element.id.toString();
+        break;
+      }
+    }
   }
 
   void getAssets() async {
@@ -81,11 +89,15 @@ class AssetListController extends GetxController {
     //buildingList.add(building!);
     isAssetLoading.value = false;
     assetListOnline.value = list;
+
     for (var element in assetListOnline) {
       suggetionList.add(element.name);
       selectedDropdownVlaue.value = suggetionList[0];
+
+      print(selectedAssetId.value);
     }
     print(assetList.length);
+    selectedAssetId.value = assetListOnline[0].id.toString();
   }
 
   @override

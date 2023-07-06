@@ -16,7 +16,7 @@ class FloorRoomController extends GetxController {
   FloorRouteMotel routeItemInfo = Get.arguments;
 
   var floorID = "none".obs;
-  var roomID = "none".obs;
+  //var roomID = "none".obs;
   var floorList = <FloorResponseModel>[].obs;
   var roomList = <RoomResponseModel>[].obs;
   final TextEditingController textEditingController = TextEditingController();
@@ -63,7 +63,8 @@ class FloorRoomController extends GetxController {
   //room
   void getRoom(String floorId) async {
     isLoading.value = true;
-    print("hi");
+    print("hi room ");
+    print("Flood ID:ROOM:$floorId");
     var list =
         (await RoomService.allRoombyFloor(floorId)).cast<RoomResponseModel>();
 
@@ -111,6 +112,9 @@ class FloorRoomController extends GetxController {
 
   @override
   void onInit() {
+    // print(
+    //   "Floor ID:",
+    // );
     getFloor(routeItemInfo.buildingId.toString());
     super.onInit();
   }

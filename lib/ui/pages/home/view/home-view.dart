@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:inventory_mangament_app/constatns/color.dart';
@@ -12,6 +12,7 @@ import 'package:inventory_mangament_app/ui/widgets/custom-button.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatefulWidget {
@@ -184,6 +185,14 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //   Future<void> launchURL(url) async {
+    //   const url = 'https://www.example.com'; // Replace with your URL
+    //   if (await canLaunch(url)) {
+    //     await launch(url);
+    //   } else {
+    //     throw 'Could not launch $url';
+    //   }
+    // }
     return SizedBox(
       width: 250,
       child: Drawer(
@@ -221,9 +230,9 @@ class AppDrawer extends StatelessWidget {
                     onTap: () async {
                       bool isCreated = await ExportDataServcie.exportData();
                       if (isCreated) {
-                        Get.snackbar("Cogress", "Successfully Exported",
-                            colorText: whiteColor,
-                            backgroundColor: Colors.green);
+                        // Get.snackbar("Cogress", "Successfully Exported",
+                        //     colorText: whiteColor,
+                        //     backgroundColor: Colors.green);
                       } else {
                         Get.snackbar("Oh", "Somethign went wrong",
                             colorText: whiteColor, backgroundColor: Colors.red);

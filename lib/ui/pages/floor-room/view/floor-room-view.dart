@@ -194,7 +194,9 @@ class ItemWidget extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 controller.routeItemInfo.floorNo = item.name;
+                controller.routeItemInfo.floorId = item.id.toString();
                 controller.floorID.value = item.id.toString();
+                print(controller.floorID.value);
                 //get floor id
                 controller.getRoom(item.id.toString());
                 Get.to(const RoomView(),
@@ -219,6 +221,9 @@ class ItemWidget extends StatelessWidget {
               child: IconButton(
                   onPressed: () {
                     controller.routeItemInfo.floorNo = item.name;
+                    controller.routeItemInfo.floorId = item.id.toString();
+                    controller.floorID.value = item.id.toString();
+                    controller.getRoom(item.id.toString());
                     Get.to(const RoomView(),
                         arguments: controller.routeItemInfo,
                         transition: Transition.rightToLeftWithFade);
