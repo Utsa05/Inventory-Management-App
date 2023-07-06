@@ -228,15 +228,27 @@ class AppDrawer extends StatelessWidget {
             isAdmin == true
                 ? ListTile(
                     onTap: () async {
-                      bool isCreated = await ExportDataServcie.exportData();
-                      if (isCreated) {
-                        // Get.snackbar("Cogress", "Successfully Exported",
-                        //     colorText: whiteColor,
-                        //     backgroundColor: Colors.green);
+                      if (await canLaunch(downloadUrl)) {
+                        await launch(downloadUrl, headers: {
+                          'Content-Type': 'application/json',
+                          "data": "habib"
+                        });
                       } else {
-                        Get.snackbar("Oh", "Somethign went wrong",
-                            colorText: whiteColor, backgroundColor: Colors.red);
+                        throw 'Could not launch $downloadUrl';
+
+                        // if (!await launchUrl(Uri.parse(url))) {
+                        //   throw Exception('Could not launch $url');
+                        // }
                       }
+                      // bool isCreated = await ExportDataServcie.exportData();
+                      // if (isCreated) {
+                      //   // Get.snackbar("Cogress", "Successfully Exported",
+                      //   //     colorText: whiteColor,
+                      //   //     backgroundColor: Colors.green);
+                      // } else {
+                      //   Get.snackbar("Oh", "Somethign went wrong",
+                      //       colorText: whiteColor, backgroundColor: Colors.red);
+                      // }
                     },
                     leading: const Icon(
                       Icons.file_download,

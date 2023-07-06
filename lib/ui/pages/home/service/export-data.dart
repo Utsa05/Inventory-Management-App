@@ -16,33 +16,26 @@ class ExportDataServcie {
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
+      "data": "habib"
     };
 
-    var response;
     try {
-      response = await http.get(Uri.parse(url), headers: headers);
-      if (response.statusCode == 200) {
-        if (await canLaunch(url)) {
-          await launch(url);
-        } else {
-          throw 'Could not launch $url';
-        }
+      if (await canLaunch(url)) {
+        await launch(url,
+            headers: {'Content-Type': 'application/json', "data": "habib"});
+      } else {
+        throw 'Could not launch $url';
 
         // if (!await launchUrl(Uri.parse(url))) {
         //   throw Exception('Could not launch $url');
         // }
       }
-      debugPrint(response.statusCode);
     } on SocketException {
       debugPrint("No Internet Connection");
     } catch (e) {
       debugPrint(e.toString());
     }
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
+    return true;
   }
 }
