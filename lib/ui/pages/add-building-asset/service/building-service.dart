@@ -49,9 +49,15 @@ class BuildingService {
   }
 
   static Future<List<BuildingCreateResponseModel>> allBuildign(
-      String thanaId) async {
+      String thanaId, bool? isForUser) async {
     //var response;
-    String url = "${globalUrl}admin/projects/1/thanas/$thanaId/buildings/";
+    String type;
+    if (isForUser == true) {
+      type = "user";
+    } else {
+      type = "admin";
+    }
+    String url = "$globalUrl$type/projects/1/thanas/$thanaId/buildings/";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',

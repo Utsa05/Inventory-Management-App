@@ -1,5 +1,109 @@
 // ignore_for_file: file_names
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:inventory_mangament_app/ui/pages/home/model/district-model.dart';
+
+import '../../../../constatns/api.dart';
+import '../../add-building-asset/model/error-response-model.dart';
+
+class DistrictService {
+  static Future<List<DistrictModelNew>> getAllDistrict() async {
+    //var response;
+    String url = "${globalUrl}admin/districts/";
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+
+    var response;
+    try {
+      response = await http.get(Uri.parse(url), headers: headers);
+
+      debugPrint(response.statusCode);
+    } on SocketException {
+      debugPrint("No Internet Connection");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    if (response.statusCode == 200) {
+      var responseData = json.decode(response.body);
+      List<DistrictModelNew> districtList = [];
+      for (var item in responseData) {
+        DistrictModelNew user = DistrictModelNew(
+          id: item["id"],
+          name: item["name"].toString(),
+          createdAt: item["createdAt"].toString(),
+          updatedAt: item["updatedAt"].toString(),
+        );
+
+        districtList.add(user);
+      }
+
+      return districtList;
+    } else {
+      //token error
+      print(response.body);
+      ErrorResponseModel errorResponseModel =
+          errorResponseModelFromJson(response.body);
+      if (errorResponseModel.message.toLowerCase().contains("jwt")) {
+        debugPrint("Token Expired");
+      }
+      throw Exception("Token Error");
+    }
+  }
+
+  static Future<List<DistrictModelNew>> getAllDistrictUser() async {
+    //var response;
+    String url = "${globalUrl}user/projects/1/districts/";
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+
+    var response;
+    try {
+      response = await http.get(Uri.parse(url), headers: headers);
+
+      debugPrint(response.statusCode);
+    } on SocketException {
+      debugPrint("No Internet Connection");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    if (response.statusCode == 200) {
+      var responseData = json.decode(response.body);
+      List<DistrictModelNew> districtList = [];
+      for (var item in responseData) {
+        DistrictModelNew user = DistrictModelNew(
+          id: item["id"],
+          name: item["name"].toString(),
+          createdAt: item["createdAt"].toString(),
+          updatedAt: item["updatedAt"].toString(),
+        );
+
+        districtList.add(user);
+      }
+
+      return districtList;
+    } else {
+      //token error
+      print(response.body);
+      ErrorResponseModel errorResponseModel =
+          errorResponseModelFromJson(response.body);
+      if (errorResponseModel.message.toLowerCase().contains("jwt")) {
+        debugPrint("Token Expired");
+      }
+      throw Exception("Token Error");
+    }
+  }
+}
+
 const List districtListJson = [
   {
     "id": "1",

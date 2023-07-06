@@ -109,8 +109,9 @@ class Addnew extends StatelessWidget {
                   //test - create new building
 
                   if (controller.routeItemInfo["isBuilding"] == true) {
+                    print("THanaID:" + controller.routeItemInfo["thanaId"]);
                     controller.addNewBuilding(
-                        "1",
+                        controller.routeItemInfo["thanaId"],
                         BuildingModel(
                             name: controller.textEditingController.text,
                             active: true));

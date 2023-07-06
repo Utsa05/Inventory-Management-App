@@ -41,6 +41,7 @@ class RegisterService {
       return true;
     } else {
       //token error
+      debugPrint(response.body);
       ErrorResponseModel errorResponseModel =
           errorResponseModelFromJson(response.body);
       if (errorResponseModel.message.toLowerCase().contains("jwt")) {

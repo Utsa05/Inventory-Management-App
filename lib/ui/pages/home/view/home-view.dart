@@ -81,62 +81,80 @@ class _HomeViewState extends State<HomeView> {
           child: SafeArea(
             child: isAdmin == true
                 //for admin
-                ? ListView(
-                    children: [
-                      SizedBox(
-                          height: pm60,
-                          child: SuggetionBox(
-                            homeController: homeController,
-                            hint: "District",
-                            textEditingController:
-                                homeController.districtController.value,
-                            list: homeController.suggetionDistrict,
-                          )),
-                      const SizedBox(
-                        height: pm15,
-                      ),
-                      ThanaWidget(homeController: homeController),
-                      const SizedBox(
-                        height: pm55,
-                      ),
-                      Obx(() {
-                        return Visibility(
-                          visible: homeController.isThanaSelected.isTrue,
-                          child: SizedBox(
-                              width: double.infinity,
-                              height: pm55,
-                              child: CustomButton(
-                                title: "Add Building",
-                                tap: () {
-                                  goToAddPage(true);
-                                },
-                                isDefault: false,
-                              )),
-                        );
-                      }),
-                      const SizedBox(
-                        height: pm10,
-                      ),
-                      Obx(() {
-                        return Visibility(
-                          visible: homeController.isThanaSelected.isTrue,
-                          child: SizedBox(
-                              width: double.infinity,
-                              height: pm55,
-                              child: CustomButton(
-                                title: "Set Assets",
-                                tap: () {
-                                  goToAddPage(false);
-                                },
-                                isDefault: false,
-                              )),
-                        );
-                      }),
-                    ],
-                  )
+                ? Obx(() {
+                    return homeController.isLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: blackColor,
+                            ),
+                          )
+                        : ListView(
+                            children: [
+                              SizedBox(
+                                  height: pm60,
+                                  child: SuggetionBox(
+                                    homeController: homeController,
+                                    hint: "District",
+                                    textEditingController:
+                                        homeController.districtController.value,
+                                    list: homeController.suggetionDistrict,
+                                  )),
+                              const SizedBox(
+                                height: pm15,
+                              ),
+                              ThanaWidget(homeController: homeController),
+                              const SizedBox(
+                                height: pm55,
+                              ),
+                              Obx(() {
+                                return Visibility(
+                                  visible:
+                                      homeController.isThanaSelected.isTrue,
+                                  child: SizedBox(
+                                      width: double.infinity,
+                                      height: pm55,
+                                      child: CustomButton(
+                                        title: "Add Building",
+                                        tap: () {
+                                          goToAddPage(true);
+                                        },
+                                        isDefault: false,
+                                      )),
+                                );
+                              }),
+                              const SizedBox(
+                                height: pm10,
+                              ),
+                              Obx(() {
+                                return Visibility(
+                                  visible:
+                                      homeController.isThanaSelected.isTrue,
+                                  child: SizedBox(
+                                      width: double.infinity,
+                                      height: pm55,
+                                      child: CustomButton(
+                                        title: "Set Assets",
+                                        tap: () {
+                                          goToAddPage(false);
+                                        },
+                                        isDefault: false,
+                                      )),
+                                );
+                              }),
+                            ],
+                          );
+                  })
 
                 //for user
-                : UserPortion(homeController: homeController),
+                : Obx(() {
+                    return homeController.isLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: whiteColor,
+                            ),
+                          )
+                        : UserPortion(homeController: homeController);
+                  }),
           ),
         ));
   }
@@ -145,7 +163,8 @@ class _HomeViewState extends State<HomeView> {
     return Get.toNamed(addbuildingassetRoute, arguments: {
       "thana": homeController.thanaController.value.text,
       "district": homeController.districtController.value.text,
-      "isBuilding": isBuilding
+      "isBuilding": isBuilding,
+      "thanaId": homeController.selectedThanaId.value,
     });
   }
 }
@@ -446,7 +465,7 @@ class SuggetionBox extends StatelessWidget {
     );
   }
 
-  submit(text) {
+  submit(text) async {
     if (hint == "Thana") {
       homeController.isThanaSelected.value = true;
       homeController.thanaController.value.text = text;
@@ -460,9 +479,10 @@ class SuggetionBox extends StatelessWidget {
       homeController.buildingController.value.text = text;
       homeController.isBuilding.value = true;
 
-      for (var item in homeController.buildingModelList) {
+      for (var item in homeController.suggetionBuildingOnline) {
         if (item.name == text) {
-          homeController.selectedBuildingId.value = item.id!;
+          homeController.selectedBuildingId.value = item.id.toString();
+          print("Building ID:");
           print(item.id);
           break;
         }
@@ -471,24 +491,49 @@ class SuggetionBox extends StatelessWidget {
 
     if (hint == "District") {
       homeController.thanaController.value.clear();
-      for (var item in homeController.districtModelList) {
+      for (var item in homeController.districtListAdmin) {
         if (item.name == homeController.districtController.value.text) {
-          homeController.selectedDistrictId.value = item.id!;
+          homeController.selectedDistrictId.value = item.id.toString();
 
-          homeController.readythanaSuggetionList(item.id!);
+          homeController.readythanaSuggetionList(item.id.toString());
           break;
         }
       }
     }
 
+    // if (hint == "Thana") {
+    //   homeController.buildingController.value.clear();
+    //   for (var item in homeController.thanaListAdmin) {
+    //     if (item.name == homeController.thanaController.value.text) {
+    //       homeController.selectedThanaId.value = item.id.toString();
+    //       print("HI");
+    //       homeController.readyBuildingSuggetionList(item.id.toString());
+    //       break;
+    //     }
+    //   }
+    // }
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
     if (hint == "Thana") {
       homeController.buildingController.value.clear();
-      for (var item in homeController.thanaModelList) {
-        if (item.name == homeController.thanaController.value.text) {
-          homeController.selectedThanaId.value = item.id!;
-
-          homeController.readyBuildingSuggetionList(item.id!);
-          break;
+      if (sharedPreferences.getString(userType) != "admin") {
+        for (var item in homeController.thanaListUser) {
+          if (item.name == homeController.thanaController.value.text) {
+            homeController.selectedThanaId.value = item.id.toString();
+            print("HI");
+            homeController.readyBuildingSuggetionList(item.id.toString());
+            break;
+          }
+        }
+      } else {
+        for (var item in homeController.thanaListAdmin) {
+          if (item.name == homeController.thanaController.value.text) {
+            homeController.selectedThanaId.value = item.id.toString();
+            print("HI");
+            homeController.readyBuildingSuggetionList(item.id.toString());
+            break;
+          }
         }
       }
     }
