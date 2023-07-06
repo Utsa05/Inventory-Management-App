@@ -7,6 +7,7 @@ import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/constatns/warning-dialog.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-model.dart';
 import 'package:inventory_mangament_app/ui/pages/home/controller/home-controller.dart';
+import 'package:inventory_mangament_app/ui/pages/home/service/export-data.dart';
 import 'package:inventory_mangament_app/ui/widgets/custom-button.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
@@ -217,7 +218,17 @@ class AppDrawer extends StatelessWidget {
             ),
             isAdmin == true
                 ? ListTile(
-                    onTap: () {},
+                    onTap: () async {
+                      bool isCreated = await ExportDataServcie.exportData();
+                      if (isCreated) {
+                        Get.snackbar("Cogress", "Successfully Exported",
+                            colorText: whiteColor,
+                            backgroundColor: Colors.green);
+                      } else {
+                        Get.snackbar("Oh", "Somethign went wrong",
+                            colorText: whiteColor, backgroundColor: Colors.red);
+                      }
+                    },
                     leading: const Icon(
                       Icons.file_download,
                       size: 20,
