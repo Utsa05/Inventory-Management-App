@@ -15,6 +15,8 @@ import 'package:inventory_mangament_app/ui/pages/floor-room/service/room-serivic
 class FloorRoomController extends GetxController {
   FloorRouteMotel routeItemInfo = Get.arguments;
 
+  var floorID = "none".obs;
+  var roomID = "none".obs;
   var floorList = <FloorResponseModel>[].obs;
   var roomList = <RoomResponseModel>[].obs;
   final TextEditingController textEditingController = TextEditingController();
@@ -23,6 +25,7 @@ class FloorRoomController extends GetxController {
   void getFloor(String buldingId) async {
     isLoading.value = true;
     print("hi");
+    print(buldingId);
     var list =
         (await FloorService.allBuildign(buldingId)).cast<FloorResponseModel>();
 
@@ -108,7 +111,7 @@ class FloorRoomController extends GetxController {
 
   @override
   void onInit() {
-    getFloor("62");
+    getFloor(routeItemInfo.buildingId.toString());
     super.onInit();
   }
 }

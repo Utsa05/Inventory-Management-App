@@ -5,15 +5,8 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-AssetDetailsResponseModel assetDetailsResponseModelFromJson(String str) =>
-    AssetDetailsResponseModel.fromJson(json.decode(str));
-
-String assetDetailsResponseModelToJson(AssetDetailsResponseModel data) =>
-    json.encode(data.toJson());
-
 class AssetDetailsResponseModel {
   final int id;
-  final String name;
   final String gpsLatitude;
   final String gpsLongitude;
   final DateTime date;
@@ -29,7 +22,6 @@ class AssetDetailsResponseModel {
 
   AssetDetailsResponseModel({
     required this.id,
-    required this.name,
     required this.gpsLatitude,
     required this.gpsLongitude,
     required this.date,
@@ -46,7 +38,6 @@ class AssetDetailsResponseModel {
 
   AssetDetailsResponseModel copyWith({
     int? id,
-    String? name,
     String? gpsLatitude,
     String? gpsLongitude,
     DateTime? date,
@@ -62,7 +53,6 @@ class AssetDetailsResponseModel {
   }) =>
       AssetDetailsResponseModel(
         id: id ?? this.id,
-        name: name ?? this.name,
         gpsLatitude: gpsLatitude ?? this.gpsLatitude,
         gpsLongitude: gpsLongitude ?? this.gpsLongitude,
         date: date ?? this.date,
@@ -77,10 +67,14 @@ class AssetDetailsResponseModel {
         district: district ?? this.district,
       );
 
+  factory AssetDetailsResponseModel.fromRawJson(String str) =>
+      AssetDetailsResponseModel.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
   factory AssetDetailsResponseModel.fromJson(Map<String, dynamic> json) =>
       AssetDetailsResponseModel(
         id: json["id"],
-        name: json["name"],
         gpsLatitude: json["gps_latitude"],
         gpsLongitude: json["gps_longitude"],
         date: DateTime.parse(json["date"]),
@@ -97,7 +91,6 @@ class AssetDetailsResponseModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": name,
         "gps_latitude": gpsLatitude,
         "gps_longitude": gpsLongitude,
         "date": date.toIso8601String(),

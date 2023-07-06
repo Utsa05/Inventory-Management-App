@@ -114,7 +114,7 @@ class Addnew extends StatelessWidget {
                   //     id: random.nextInt(10000)));
 
                   controller.addNewFloor(
-                      "62",
+                      controller.routeItemInfo.buildingId.toString(),
                       FloorRequestModel(
                           name: controller.textEditingController.text,
                           active: true,
@@ -194,7 +194,9 @@ class ItemWidget extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 controller.routeItemInfo.floorNo = item.name;
-                controller.getRoom("15");
+                controller.floorID.value = item.id.toString();
+                //get floor id
+                controller.getRoom(item.id.toString());
                 Get.to(const RoomView(),
                     arguments: controller.routeItemInfo,
                     transition: Transition.rightToLeftWithFade);
@@ -350,6 +352,7 @@ class ItemRoomWidget extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 controller.routeItemInfo.roomNo = item.name;
+                controller.routeItemInfo.roomId = item.id.toString();
                 Get.toNamed(
                   assetLIstRoute,
                   arguments: controller.routeItemInfo,
@@ -373,6 +376,7 @@ class ItemRoomWidget extends StatelessWidget {
               child: IconButton(
                   onPressed: () {
                     controller.routeItemInfo.roomNo = item.name;
+                    controller.routeItemInfo.roomId = item.id.toString();
                     Get.toNamed(
                       assetLIstRoute,
                       arguments: controller.routeItemInfo,
@@ -445,7 +449,7 @@ class AddRoomnew extends StatelessWidget {
             TextButton(
                 onPressed: () {
                   controller.addNewRoom(
-                      "15",
+                      controller.floorID.value,
                       RoomRequestModel(
                           name: controller.textEditingController.text,
                           active: true,

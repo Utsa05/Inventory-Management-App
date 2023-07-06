@@ -6,10 +6,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropping/image_cropping.dart';
+import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/service/asset-service.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-details/service/asset-details-service.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-details-response-model.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-request-model.dart';
+import 'package:inventory_mangament_app/ui/pages/floor-room/controller/floor-room-controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
@@ -26,12 +28,17 @@ class AssetListController extends GetxController {
   var assetList = <AssetModel>[].obs;
   var assetDetailsList = <AssetDetailsResponseModel>[].obs;
   var assetTextEditigngController = TextEditingController();
-  var suggetionList = ["Laptop", "Mobile", "Computer", "Watch"];
+  var suggetionList = <String>[].obs;
   var key = GlobalKey<AutoCompleteTextFieldState<String>>();
   var initialTextController = TextEditingController().obs;
   var remarkTextController = TextEditingController().obs;
   var pickedFile = XFile("path").obs;
   var isAlreadyAddedAsset = false.obs;
+  var isAssetLoading = false.obs;
+  var assetListOnline = <BuildingCreateResponseModel>[].obs;
+
+  var selectedDropdownVlaue = "".obs;
+
   var isLoading = false.obs;
   Rx<Position>? currentPosition = const Position(
           longitude: 0,
@@ -45,14 +52,40 @@ class AssetListController extends GetxController {
       .obs;
 
   Future<void> getCurrentPosition() async {
+    isAssetLoading(true);
     final hasPermission = await handleLocationPermission();
     if (!hasPermission) return;
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       currentPosition!.value = position;
+      print(currentPosition!.value.latitude);
+      print(currentPosition!.value.longitude);
     }).catchError((e) {
       debugPrint(e);
     });
+
+    isAssetLoading(false);
+  }
+
+  void changeDropdownValue(String val) {
+    selectedDropdownVlaue.value = val;
+  }
+
+  void getAssets() async {
+    isAssetLoading.value = true;
+    print("hi");
+    var list =
+        (await AssetService.allAsset()).cast<BuildingCreateResponseModel>();
+
+    print(assetList.length);
+    //buildingList.add(building!);
+    isAssetLoading.value = false;
+    assetListOnline.value = list;
+    for (var element in assetListOnline) {
+      suggetionList.add(element.name);
+      selectedDropdownVlaue.value = suggetionList[0];
+    }
+    print(assetList.length);
   }
 
   @override
@@ -65,7 +98,9 @@ class AssetListController extends GetxController {
   void onInit() {
     isAlreadyAddedAsset.value = false;
     print(routeInfo.roomNo);
-    getAssetDetailList(routeInfo.roomNo.toString());
+    print("room ID:${routeInfo.roomId}");
+    getAssets();
+    getAssetDetailList(routeInfo.roomId.toString());
     super.onInit();
   }
 
@@ -122,13 +157,14 @@ class AssetListController extends GetxController {
   //   assetList.add(item);
   // }
 
-  Future captureImage(BuildContext context) async {
+  Future<void> captureImage(BuildContext context) async {
     try {
       XFile? pickedFilefile = await ImagePicker().pickImage(
-          source: ImageSource.camera,
-          imageQuality: 50,
-          maxWidth: 1920,
-          maxHeight: 1920);
+        source: ImageSource.camera,
+        imageQuality: 50,
+        maxWidth: 1920,
+        maxHeight: 1920,
+      );
 
       if (pickedFilefile != null) {
         pickedFile.value = pickedFilefile;
@@ -136,15 +172,21 @@ class AssetListController extends GetxController {
           file: pickedFile.value,
         );
 
-        if (response['message'] == "Image uploaded successfully!") {
+        print(response['message']);
+
+        if (response != null &&
+            response['message'] == "Image uploaded successfully!") {
           routeInfo.imageUrl = response['filename'];
-          routeInfo.assetName = assetTextEditigngController.value.text;
-          assetTextEditigngController.clear();
+          routeInfo.assetName = selectedDropdownVlaue.value;
 
           Get.to(const AssetDetailsPage(), arguments: routeInfo);
         } else {
-          Get.snackbar("Ops", "Image not uploaded",
-              colorText: whiteColor, backgroundColor: Colors.red);
+          Get.snackbar(
+            "Ops",
+            "Image not uploaded",
+            colorText: whiteColor,
+            backgroundColor: Colors.red,
+          );
         }
 
         // ignore: use_build_context_synchronously
@@ -154,10 +196,47 @@ class AssetListController extends GetxController {
       print("success");
       print(pickedFilefile!.path);
     } catch (e) {
-      print("Please Try agaig");
+      print("Please try again");
       print(e.toString());
     }
   }
+
+  // Future captureImage(BuildContext context) async {
+  //   try {
+  //     XFile? pickedFilefile = await ImagePicker().pickImage(
+  //         source: ImageSource.camera,
+  //         imageQuality: 50,
+  //         maxWidth: 1920,
+  //         maxHeight: 1920);
+
+  //     if (pickedFilefile != null) {
+  //       pickedFile.value = pickedFilefile;
+  //       var response = await UploadImageService().uploadImage(
+  //         file: pickedFile.value,
+  //       );
+
+  //       if (response['message'] == "Image uploaded successfully!") {
+  //         routeInfo.imageUrl = response['filename'];
+  //         routeInfo.assetName = assetTextEditigngController.value.text;
+  //         assetTextEditigngController.clear();
+
+  //         //Get.to(const AssetDetailsPage(), arguments: routeInfo);
+  //       } else {
+  //         Get.snackbar("Ops", "Image not uploaded",
+  //             colorText: whiteColor, backgroundColor: Colors.red);
+  //       }
+
+  //       // ignore: use_build_context_synchronously
+  //       // cropImage(
+  //       //     await pickedFilefile.readAsBytes(), pickedFilefile.path, context);
+  //     }
+  //     print("success");
+  //     print(pickedFilefile!.path);
+  //   } catch (e) {
+  //     print("Please Try again");
+  //     print(e.toString());
+  //   }
+  // }
 
   Future<bool> handleLocationPermission() async {
     bool serviceEnabled;

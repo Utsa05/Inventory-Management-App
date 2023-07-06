@@ -32,8 +32,10 @@ class AddBuildingAssetController extends GetxController {
   void getBuilding() async {
     isLoading.value = true;
     print("hi");
-    var list = (await BuildingService.allBuildign("1"))
-        .cast<BuildingCreateResponseModel>();
+    print(routeItemInfo["thanaId"]);
+    var list =
+        (await BuildingService.allBuildign(routeItemInfo["thanaId"], false))
+            .cast<BuildingCreateResponseModel>();
 
     print(buildingList.length);
     //buildingList.add(building!);
@@ -47,7 +49,7 @@ class AddBuildingAssetController extends GetxController {
 
     await BuildingService.addBuilding(id, data);
 
-    var list = (await BuildingService.allBuildign(id))
+    var list = (await BuildingService.allBuildign(id, false))
         .cast<BuildingCreateResponseModel>();
 
     print(buildingList.length);

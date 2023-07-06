@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:math';
 
 import 'package:flutter/gestures.dart';
@@ -115,10 +117,7 @@ class AssetDetailsItem extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(pm10),
               child: Image.network(
-                  fit: BoxFit.cover,
-                  height: pm90,
-                  width: pm90,
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXnFktEUkoMSeLkLPWFqAnlRtsmYFYQfK4iw&usqp=CAU"),
+                  fit: BoxFit.cover, height: pm90, width: pm90, item.imageUrl),
             ),
           ),
           Padding(
@@ -127,7 +126,7 @@ class AssetDetailsItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.name,
+                  item.initialTag.toString(),
                   style: Theme.of(context)
                       .textTheme
                       .displayMedium!
@@ -190,7 +189,9 @@ class AssetDetailsItem extends StatelessWidget {
                           final controller = Get.put(AssetListController());
 
                           warningDialog(context, () {
-                            controller.deleteBuilding("9", item.id.toString());
+                            controller.deleteBuilding(
+                                controller.routeInfo.roomId.toString(),
+                                item.id.toString());
                             Navigator.of(context).pop();
                           });
                         },
@@ -247,50 +248,46 @@ class Addnew extends StatelessWidget {
               children: [
                 Expanded(
                   child: SizedBox(
-                    height: 45,
-                    child: SimpleAutoCompleteTextField(
-                      key: controller.key,
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                          fontWeight: FontWeight.normal, fontSize: pm20),
-                      decoration: InputDecoration(
-                          isDense: false,
-                          fillColor: whiteColor,
-                          filled: true,
-                          hintText: assetsName,
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: pm15),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(defoultPM),
-                          )),
-                      controller: controller.assetTextEditigngController,
-                      suggestions: controller.suggetionList,
-                      textChanged: (text) {
-                        // if (hint == "District") {
-                        //   if (homeController.districtController.value.text.isEmpty) {
-                        //     homeController.thanaController.value.clear();
-                        //     homeController.suggetionThana.value = [];
-                        //     homeController.buildingController.value.clear();
-                        //     homeController.suggetionBuilding.value = [];
-                        //   }
-                        // }
-
-                        // if (hint == "Thana") {
-                        //   if (homeController.thanaController.value.text.isEmpty) {
-                        //     homeController.buildingController.value.clear();
-                        //     homeController.suggetionBuilding.value = [];
-                        //   }
-                        // }
-                      },
-                      textSubmitted: (data) {
-                        controller.assetTextEditigngController.text = data;
-                      },
-                      clearOnSubmit: false,
-                    ),
-                  ),
+                      height: 45,
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1.0,
+                          ),
+                        ),
+                        child: Obx(() {
+                          return controller.isAssetLoading.value
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: blackColor,
+                                  ),
+                                )
+                              : DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value:
+                                        controller.selectedDropdownVlaue.value,
+                                    //hint: const Text('Select Asset'),
+                                    onChanged: (newValue) {
+                                      controller.changeDropdownValue(newValue!);
+                                    },
+                                    items: controller.suggetionList
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                );
+                        }),
+                      )),
                 ),
                 const SizedBox(
                   width: pm10,
@@ -299,13 +296,31 @@ class Addnew extends StatelessWidget {
                   backgroundColor: blueColor,
                   child: IconButton(
                       onPressed: () async {
-                        if (controller
-                            .assetTextEditigngController.text.isNotEmpty) {
-                          controller.captureImage(context);
+                        if (await controller.handleLocationPermission() ==
+                            false) {
+                          Get.snackbar("Ops", "Please on your location",
+                              colorText: whiteColor,
+                              backgroundColor: Colors.red);
                         } else {
-                          Get.snackbar("Ops", "Asset name cannot be empty",
-                              backgroundColor: Colors.red,
-                              colorText: whiteColor);
+                          if (controller.suggetionList.isNotEmpty) {
+                            controller.getCurrentPosition().whenComplete(() {
+                              if (controller.isAssetLoading.value == false) {
+                                // Get.snackbar("Hey", "Go",
+                                //     colorText: whiteColor,
+                                //     backgroundColor: Colors.green);
+                                controller.captureImage(context);
+                              } else {
+                                Get.snackbar("Ops", "Please wait...",
+                                    colorText: whiteColor,
+                                    backgroundColor: Colors.red);
+                              }
+                              controller.captureImage(context);
+                            });
+                          } else {
+                            Get.snackbar("Ops", "Asset name cannot be empty",
+                                backgroundColor: Colors.red,
+                                colorText: whiteColor);
+                          }
                         }
 
                         // controller.addAssetItem(

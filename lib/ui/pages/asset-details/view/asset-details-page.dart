@@ -125,11 +125,15 @@ class AssetDetailsPage extends StatelessWidget {
                                   assetListController.routeInfo;
                               assetListController.addNewAssetDetails(
                                   //room id
-                                  "9",
+                                  assetInfo.roomId.toString(),
                                   AssetRequestModel(
                                       name: assetInfo.assetName!,
-                                      gpsLatitude: "121212",
-                                      gpsLongitude: "2323",
+                                      gpsLatitude: assetListController
+                                          .currentPosition!.value.latitude
+                                          .toString(),
+                                      gpsLongitude: assetListController
+                                          .currentPosition!.value.longitude
+                                          .toString(),
                                       date: DateTime.now(),
                                       imageUrl: assetInfo.imageUrl!,
                                       initialTag: assetListController

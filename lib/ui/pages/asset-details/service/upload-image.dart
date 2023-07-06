@@ -21,8 +21,10 @@ class UploadImageService {
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
       print(jsonDecode(response.body));
+      print("done");
       return jsonDecode(response.body);
     } catch (e) {
+      print("error");
       return null;
     }
   }

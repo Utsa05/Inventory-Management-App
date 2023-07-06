@@ -63,9 +63,9 @@ class AssetDetailsService {
   }
 
   static Future<List<AssetDetailsResponseModel>> allAssetDetails(
-      String thanaId) async {
+      String roomid) async {
     //var response;
-    String url = "${globalUrl}user/rooms/9/asset_details/";
+    String url = "${globalUrl}user/rooms/$roomid/asset_details/";
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ class AssetDetailsService {
       for (var assetDetail in responseData) {
         AssetDetailsResponseModel user = AssetDetailsResponseModel(
           id: assetDetail["id"] as int,
-          name: assetDetail["name"],
+          //  name: assetDetail["name"],
           gpsLatitude: assetDetail["gps_latitude"],
           gpsLongitude: assetDetail["gps_longitude"],
           date: DateTime.parse(assetDetail["date"]),
