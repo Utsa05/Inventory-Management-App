@@ -12,7 +12,7 @@ import 'package:inventory_mangament_app/ui/widgets/custom-button.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatefulWidget {
@@ -228,18 +228,29 @@ class AppDrawer extends StatelessWidget {
             isAdmin == true
                 ? ListTile(
                     onTap: () async {
-                      if (await canLaunch(downloadUrl)) {
-                        await launch(downloadUrl, headers: {
-                          'Content-Type': 'application/json',
-                          "data": "habib"
-                        });
-                      } else {
-                        throw 'Could not launch $downloadUrl';
-
-                        // if (!await launchUrl(Uri.parse(url))) {
-                        //   throw Exception('Could not launch $url');
-                        // }
+                      try {
+                        await launch(
+                          downloadUrl,
+                          customTabsOption: CustomTabsOption(
+                            toolbarColor: Theme.of(context).primaryColor,
+                            enableDefaultShare: true,
+                            enableUrlBarHiding: true,
+                            showPageTitle: true,
+                          ),
+                        );
+                      } catch (e) {
+                        debugPrint(e.toString());
                       }
+                      // if (await canLaunch(downloadUrl)) {
+                      //   await launch(downloadUrl,
+                      //       forceSafariVC: false, forceWebView: false);
+                      // } else {
+                      //   throw 'Could not launch $downloadUrl';
+
+                      // if (!await launchUrl(Uri.parse(url))) {
+                      //   throw Exception('Could not launch $url');
+                      // }
+                      //}
                       // bool isCreated = await ExportDataServcie.exportData();
                       // if (isCreated) {
                       //   // Get.snackbar("Cogress", "Successfully Exported",
