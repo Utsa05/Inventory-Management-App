@@ -2,7 +2,6 @@
 //
 //     final errorResponseModel = errorResponseModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ErrorResponseModel errorResponseModelFromJson(String str) =>

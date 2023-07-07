@@ -2,7 +2,6 @@
 //
 //     final floorRequestModel = floorRequestModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 FloorRequestModel floorRequestModelFromJson(String str) =>

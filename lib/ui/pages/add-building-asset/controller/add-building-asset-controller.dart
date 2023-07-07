@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-model.dart';
-import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/item-model.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/service/asset-service.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/service/building-service.dart';
 

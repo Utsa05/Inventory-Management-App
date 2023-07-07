@@ -2,7 +2,6 @@
 //
 //     final buildingModel = buildingModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 BuildingModel buildingModelFromJson(String str) =>

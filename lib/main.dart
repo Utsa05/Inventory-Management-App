@@ -1,7 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
-import 'package:inventory_mangament_app/constatns/storage.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/route.dart';
 import 'package:inventory_mangament_app/ui/themes/theme.dart';

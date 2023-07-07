@@ -2,7 +2,6 @@
 //
 //     final RoomResponseModel = RoomResponseModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 RoomResponseModel roomResponseModelFromJson(String str) =>

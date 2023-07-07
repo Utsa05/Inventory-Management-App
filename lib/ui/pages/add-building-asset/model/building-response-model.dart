@@ -2,7 +2,6 @@
 //
 //     final buildingResponseModel = buildingResponseModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<BuildingResponseModel> buildingResponseModelFromJson(String str) =>

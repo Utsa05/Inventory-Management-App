@@ -1,23 +1,17 @@
 // ignore_for_file: avoid_print, depend_on_referenced_packages
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/service/building-service.dart';
-import 'package:inventory_mangament_app/ui/pages/home/model/building-model.dart';
 import 'package:inventory_mangament_app/ui/pages/home/model/district-model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:inventory_mangament_app/ui/pages/home/model/thana-model.dart';
-import 'package:inventory_mangament_app/ui/pages/home/service/building-service.dart';
 import 'package:inventory_mangament_app/ui/pages/home/service/district-service.dart';
 import 'package:inventory_mangament_app/ui/pages/home/service/thana-service.dart';
 
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
-
-import '../service/district-service.dart';
 
 class HomeController extends GetxController {
   var districtController = TextEditingController().obs;

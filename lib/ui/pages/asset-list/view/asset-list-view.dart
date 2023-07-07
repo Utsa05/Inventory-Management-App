@@ -1,21 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:math';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
 import 'package:inventory_mangament_app/constatns/warning-dialog.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/controller/asset-list-controller.dart';
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-details-response-model.dart';
-import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-model.dart';
-import 'package:inventory_mangament_app/ui/widgets/custom-button.dart';
 import '../../../../constatns/color.dart';
 import '../../../../constatns/pm.dart';
-import '../../add-building-asset/model/item-model.dart';
-import '../../floor-room/controller/floor-room-controller.dart';
 
 class AssetListView extends StatelessWidget {
   const AssetListView({super.key});

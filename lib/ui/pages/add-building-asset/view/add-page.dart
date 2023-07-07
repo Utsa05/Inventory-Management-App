@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_mangament_app/constatns/color.dart';
@@ -9,8 +7,6 @@ import 'package:inventory_mangament_app/constatns/warning-dialog.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/controller/add-building-asset-controller.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-model.dart';
-import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/item-model.dart';
-import 'package:inventory_mangament_app/ui/pages/add-building-asset/service/building-service.dart';
 
 class AddPage extends StatelessWidget {
   const AddPage({super.key});
@@ -220,7 +216,9 @@ class ItemWidget extends StatelessWidget {
 
                     if (controller.routeItemInfo["isBuilding"] == true) {
                       warningDialog(context, () {
-                        controller.deleteBuilding("1", item.id.toString());
+                        controller.deleteBuilding(
+                            controller.routeItemInfo['thanaId'].toString(),
+                            item.id.toString());
                         Navigator.of(context).pop();
                       });
                     } else {

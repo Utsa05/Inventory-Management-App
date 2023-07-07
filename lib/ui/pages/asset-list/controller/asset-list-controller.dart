@@ -1,18 +1,12 @@
 // ignore_for_file: avoid_print
 
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_cropping/image_cropping.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/service/asset-service.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-details/service/asset-details-service.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-details-response-model.dart';
 import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-request-model.dart';
-import 'package:inventory_mangament_app/ui/pages/floor-room/controller/floor-room-controller.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:image_picker/image_picker.dart';
