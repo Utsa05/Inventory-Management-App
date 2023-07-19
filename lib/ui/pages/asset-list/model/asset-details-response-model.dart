@@ -18,22 +18,23 @@ class AssetDetailsResponseModel {
   final String building;
   final String thana;
   final String district;
+  final String? addedBy;
 
-  AssetDetailsResponseModel({
-    required this.id,
-    required this.gpsLatitude,
-    required this.gpsLongitude,
-    required this.date,
-    required this.imageUrl,
-    required this.initialTag,
-    required this.remarks,
-    required this.asset,
-    required this.room,
-    required this.floor,
-    required this.building,
-    required this.thana,
-    required this.district,
-  });
+  AssetDetailsResponseModel(
+      {required this.id,
+      required this.gpsLatitude,
+      required this.gpsLongitude,
+      required this.date,
+      required this.imageUrl,
+      required this.initialTag,
+      required this.remarks,
+      required this.asset,
+      required this.room,
+      required this.floor,
+      required this.building,
+      required this.thana,
+      required this.district,
+      this.addedBy});
 
   AssetDetailsResponseModel copyWith({
     int? id,
@@ -49,6 +50,7 @@ class AssetDetailsResponseModel {
     String? building,
     String? thana,
     String? district,
+    String? addedBy,
   }) =>
       AssetDetailsResponseModel(
         id: id ?? this.id,
@@ -64,6 +66,7 @@ class AssetDetailsResponseModel {
         building: building ?? this.building,
         thana: thana ?? this.thana,
         district: district ?? this.district,
+        addedBy: addedBy ?? "",
       );
 
   factory AssetDetailsResponseModel.fromRawJson(String str) =>
@@ -86,6 +89,7 @@ class AssetDetailsResponseModel {
         building: json["building"],
         thana: json["thana"],
         district: json["district"],
+        addedBy: json["addedBy"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -102,5 +106,6 @@ class AssetDetailsResponseModel {
         "building": building,
         "thana": thana,
         "district": district,
+        "addedBy": addedBy,
       };
 }

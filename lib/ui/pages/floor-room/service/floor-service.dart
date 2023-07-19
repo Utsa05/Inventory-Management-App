@@ -132,4 +132,25 @@ class FloorService {
       throw Exception("Token Error");
     }
   }
+
+  Future<bool> updateFloor(
+      String floorId, String buildingId, String value) async {
+    final Map<String, dynamic> updatedData = {'name': value};
+
+    final response = await http.put(
+      Uri.parse('${globalUrl}user/buildings/$buildingId/floors/$floorId'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(updatedData),
+    );
+
+    if (response.statusCode == 200) {
+      // Update request successful
+      return true;
+    } else {
+      // Handle error
+      return false;
+    }
+  }
 }

@@ -8,6 +8,7 @@ import 'package:inventory_mangament_app/ui/pages/asset-list/controller/asset-lis
 import 'package:inventory_mangament_app/ui/pages/asset-list/model/asset-details-response-model.dart';
 import '../../../../constatns/color.dart';
 import '../../../../constatns/pm.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
 class AssetListView extends StatelessWidget {
   const AssetListView({super.key});
@@ -239,47 +240,72 @@ class Addnew extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: SizedBox(
-                      height: 45,
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 1.0,
-                          ),
-                        ),
-                        child: Obx(() {
-                          return controller.isAssetLoading.value
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                    color: blackColor,
-                                  ),
-                                )
-                              : DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    value:
-                                        controller.selectedDropdownVlaue.value,
-                                    //hint: const Text('Select Asset'),
-                                    onChanged: (newValue) {
-                                      controller.changeDropdownValue(newValue!);
-                                    },
-                                    items: controller.suggetionList
-                                        .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                );
-                        }),
-                      )),
+                  child: Obx(() {
+                    return controller.isAssetLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: blackColor,
+                            ),
+                          )
+                        : SizedBox(
+                            height: pm50,
+                            child: SimpleAutoCompleteTextField(
+                                key: const GlobalObjectKey(1),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: pm20),
+                                decoration: InputDecoration(
+                                    isDense: false,
+                                    fillColor: whiteColor,
+                                    filled: true,
+                                    hintText: "Asset Name",
+                                    hintStyle: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .copyWith(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: pm18),
+                                    border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(defoultPM),
+                                    )),
+                                controller:
+                                    controller.assetTextController.value,
+                                suggestions: controller.suggetionList,
+                                clearOnSubmit: false,
+                                textSubmitted: (text) {
+                                  controller.assetTextController.value.text =
+                                      text;
+                                  controller.changeDropdownValue(text);
+                                }),
+                          );
+                  }
+                      //  DropdownButtonHideUnderline(
+                      //     child: DropdownButton<String>(
+                      //       value:
+                      //           controller.selectedDropdownVlaue.value,
+                      //       //hint: const Text('Select Asset'),
+                      //       onChanged: (newValue) {
+                      //         controller.changeDropdownValue(newValue!);
+                      //       },
+                      //       items: controller.suggetionList
+                      //           .map<DropdownMenuItem<String>>(
+                      //               (String value) {
+                      //         return DropdownMenuItem<String>(
+                      //           value: value,
+                      //           child: Text(
+                      //             value,
+                      //             style: const TextStyle(fontSize: 16),
+                      //           ),
+                      //         );
+                      //       }).toList(),
+                      //     ),
+                      //   );
+
+                      ),
                 ),
                 const SizedBox(
                   width: pm10,
@@ -294,20 +320,25 @@ class Addnew extends StatelessWidget {
                               colorText: whiteColor,
                               backgroundColor: Colors.red);
                         } else {
-                          if (controller.suggetionList.isNotEmpty) {
-                            controller.getCurrentPosition().whenComplete(() {
-                              if (controller.isAssetLoading.value == false) {
-                                // Get.snackbar("Hey", "Go",
-                                //     colorText: whiteColor,
-                                //     backgroundColor: Colors.green);
+                          if (controller.suggetionList.isNotEmpty &&
+                              controller
+                                  .assetTextController.value.text.isNotEmpty) {
+                            if (controller.changeDropdownValue(
+                                controller.assetTextController.value.text)) {
+                              controller.getCurrentPosition().whenComplete(() {
+                                if (controller.isAssetLoading.value == false) {
+                                  // Get.snackbar("Hey", "Go",
+                                  //     colorText: whiteColor,
+                                  //     backgroundColor: Colors.green);
+                                  controller.captureImage(context);
+                                } else {
+                                  Get.snackbar("Ops", "Please wait...",
+                                      colorText: whiteColor,
+                                      backgroundColor: Colors.red);
+                                }
                                 controller.captureImage(context);
-                              } else {
-                                Get.snackbar("Ops", "Please wait...",
-                                    colorText: whiteColor,
-                                    backgroundColor: Colors.red);
-                              }
-                              controller.captureImage(context);
-                            });
+                              });
+                            }
                           } else {
                             Get.snackbar("Ops", "Asset name cannot be empty",
                                 backgroundColor: Colors.red,

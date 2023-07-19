@@ -127,22 +127,16 @@ class _HomeViewState extends State<HomeView> {
                               const SizedBox(
                                 height: pm10,
                               ),
-                              Obx(() {
-                                return Visibility(
-                                  visible:
-                                      homeController.isThanaSelected.isTrue,
-                                  child: SizedBox(
-                                      width: double.infinity,
-                                      height: pm55,
-                                      child: CustomButton(
-                                        title: "Set Assets",
-                                        tap: () {
-                                          goToAddPage(false);
-                                        },
-                                        isDefault: false,
-                                      )),
-                                );
-                              }),
+                              SizedBox(
+                                  width: double.infinity,
+                                  height: pm55,
+                                  child: CustomButton(
+                                    title: "Set Assets",
+                                    tap: () {
+                                      goToAddPage(false);
+                                    },
+                                    isDefault: false,
+                                  ))
                             ],
                           );
                   })

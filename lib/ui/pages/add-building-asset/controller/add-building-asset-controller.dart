@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_mangament_app/constatns/color.dart';
@@ -13,7 +15,8 @@ class AddBuildingAssetController extends GetxController {
 
   var buildingList = <BuildingCreateResponseModel>[].obs;
   var assetList = <BuildingCreateResponseModel>[].obs;
-  final TextEditingController textEditingController = TextEditingController();
+  TextEditingController textEditingController = TextEditingController();
+  TextEditingController updateEditingController = TextEditingController();
   var isLoading = false.obs;
   BuildingCreateResponseModel? building;
 
@@ -44,20 +47,25 @@ class AddBuildingAssetController extends GetxController {
   }
 
   void addNewBuilding(String id, BuildingModel data) async {
-    isLoading.value = true;
+    if (isAlradyNameExistOnList(data, buildingList) == true) {
+      Get.snackbar("Ops", "Already Exist",
+          colorText: whiteColor, backgroundColor: Colors.red);
+    } else {
+      isLoading.value = true;
 
-    await BuildingService.addBuilding(id, data);
+      await BuildingService.addBuilding(id, data);
 
-    var list = (await BuildingService.allBuildign(id, false))
-        .cast<BuildingCreateResponseModel>();
+      var list = (await BuildingService.allBuildign(id, false))
+          .cast<BuildingCreateResponseModel>();
 
-    print(buildingList.length);
-    //buildingList.add(building!);
-    isLoading.value = false;
-    buildingList.value = list;
-    Get.snackbar("Added", "Successfully Added",
-        colorText: whiteColor, backgroundColor: Colors.green);
-    print(buildingList.length);
+      print(buildingList.length);
+      //buildingList.add(building!);
+      isLoading.value = false;
+      buildingList.value = list;
+      Get.snackbar("Added", "Successfully Added",
+          colorText: whiteColor, backgroundColor: Colors.green);
+      print(buildingList.length);
+    }
   }
 
   void deleteBuilding(String thanaId, String buildingId) async {
@@ -88,21 +96,26 @@ class AddBuildingAssetController extends GetxController {
   }
 
   void addNewAsset(BuildingModel data) async {
-    isLoading.value = true;
+    if (isAlradyNameExistOnList(data, assetList) == true) {
+      Get.snackbar("Ops", "Already Exist",
+          colorText: whiteColor, backgroundColor: Colors.red);
+    } else {
+      isLoading.value = true;
 
-    await AssetService.addAsset(data);
+      await AssetService.addAsset(data);
 
-    var list =
-        (await AssetService.allAsset()).cast<BuildingCreateResponseModel>();
+      var list =
+          (await AssetService.allAsset()).cast<BuildingCreateResponseModel>();
 
-    print(assetList.length);
-    //buildingList.add(building!);
-    isLoading.value = false;
+      print(assetList.length);
+      //buildingList.add(building!);
+      isLoading.value = false;
 
-    Get.snackbar("Added", "Successfully Added",
-        colorText: whiteColor, backgroundColor: Colors.green);
-    assetList.value = list;
-    print(assetList.length);
+      Get.snackbar("Added", "Successfully Added",
+          colorText: whiteColor, backgroundColor: Colors.green);
+      assetList.value = list;
+      print(assetList.length);
+    }
   }
 
   void deleteAsset(String assetId) async {
@@ -114,6 +127,56 @@ class AddBuildingAssetController extends GetxController {
           colorText: whiteColor, backgroundColor: Colors.green);
       getAssets();
     }
+    isLoading(false);
+  }
+
+  void updateAsset(String name, String assetId) async {
+    isLoading(true);
+    try {
+      bool isEdited = await AssetService().updateAsset(name, assetId);
+      if (isEdited) {
+        Get.back();
+        Get.snackbar("Updated", "Successfully Updated",
+            colorText: whiteColor, backgroundColor: Colors.green);
+        getAssets();
+      }
+    } on SocketException {
+      Get.snackbar("Oh", "No Internet",
+          colorText: whiteColor, backgroundColor: Colors.red);
+    } catch (e) {
+      print(e.toString());
+    }
+
+    isLoading(false);
+  }
+
+  bool isAlradyNameExistOnList(dynamic d, List<dynamic> list) {
+    for (var item in list) {
+      if (item.name.toLowerCase() == d.name.toLowerCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void updateBuilding(String thanaId, String buildingId, String value) async {
+    isLoading(true);
+    try {
+      bool isEdited =
+          await BuildingService().updateBuilding(thanaId, buildingId, value);
+      if (isEdited) {
+        Get.back();
+        Get.snackbar("Updated", "Successfully Updated",
+            colorText: whiteColor, backgroundColor: Colors.green);
+        getBuilding();
+      }
+    } on SocketException {
+      Get.snackbar("Oh", "No Internet",
+          colorText: whiteColor, backgroundColor: Colors.red);
+    } catch (e) {
+      print(e.toString());
+    }
+
     isLoading(false);
   }
 

@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_mangament_app/ui/pages/add-building-asset/model/building-create-response.dart';
@@ -21,17 +23,17 @@ class AssetListController extends GetxController {
   var routeInfoCore = Get.arguments as FloorRouteMotel;
   var assetList = <AssetModel>[].obs;
   var assetDetailsList = <AssetDetailsResponseModel>[].obs;
-  var assetTextEditigngController = TextEditingController();
   var suggetionList = <String>[].obs;
   var key = GlobalKey<AutoCompleteTextFieldState<String>>();
   var initialTextController = TextEditingController().obs;
   var remarkTextController = TextEditingController().obs;
+  var assetTextController = TextEditingController().obs;
   var pickedFile = XFile("path").obs;
   var isAlreadyAddedAsset = false.obs;
   var isAssetLoading = false.obs;
   var assetListOnline = <BuildingCreateResponseModel>[].obs;
 
-  var selectedDropdownVlaue = "".obs;
+  var selectedDropdownVlau = "".obs;
   var selectedAssetId = "".obs;
 
   var isLoading = false.obs;
@@ -62,14 +64,24 @@ class AssetListController extends GetxController {
     isAssetLoading(false);
   }
 
-  void changeDropdownValue(String val) {
-    selectedDropdownVlaue.value = val;
+  bool changeDropdownValue(String val) {
+    print("HI");
+    //selectedDropdownVlaue.value = val;
+    bool isFound = false;
     for (var element in assetListOnline) {
       if (element.name == val) {
         print("Selcted ID:${element.id}");
         selectedAssetId.value = element.id.toString();
+        isFound = true;
         break;
       }
+    }
+    if (isFound == true) {
+      return true;
+    } else {
+      Get.snackbar("Ops", "Not available in asset list",
+          colorText: Colors.white, backgroundColor: Colors.red);
+      return false;
     }
   }
 
@@ -86,12 +98,14 @@ class AssetListController extends GetxController {
 
     for (var element in assetListOnline) {
       suggetionList.add(element.name);
-      selectedDropdownVlaue.value = suggetionList[0];
+      // selectedDropdownVlaue.value = suggetionList[0];
+      assetTextController.value.text = suggetionList[0];
 
       print(selectedAssetId.value);
     }
     print(assetList.length);
     selectedAssetId.value = assetListOnline[0].id.toString();
+    assetTextController.value.text = assetListOnline[0].name.toLowerCase();
   }
 
   @override
@@ -112,14 +126,17 @@ class AssetListController extends GetxController {
 
   void getAssetDetailList(String roomId) async {
     isLoading.value = true;
-    print("hi");
-    var list = (await AssetDetailsService.allAssetDetails(roomId))
-        .cast<AssetDetailsResponseModel>();
+    try {
+      print("hi");
+      var list = (await AssetDetailsService.allAssetDetails(roomId))
+          .cast<AssetDetailsResponseModel>();
 
-    print(assetDetailsList.length);
-    //buildingList.add(building!);
+      print(assetDetailsList.length);
+      //buildingList.add(building!);
+
+      assetDetailsList.value = list;
+    } catch (e) {}
     isLoading.value = false;
-    assetDetailsList.value = list;
     print(assetDetailsList.length);
   }
 
@@ -183,7 +200,8 @@ class AssetListController extends GetxController {
         if (response != null &&
             response['message'] == "Image uploaded successfully!") {
           routeInfo.imageUrl = response['filename'];
-          routeInfo.assetName = selectedDropdownVlaue.value;
+          //routeInfo.assetName = selectedDropdownVlaue.value;
+          routeInfo.assetName = assetTextController.value.text;
 
           Get.to(const AssetDetailsPage(), arguments: routeInfo);
         } else {

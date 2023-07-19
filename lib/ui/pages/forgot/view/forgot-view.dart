@@ -5,7 +5,8 @@ import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/constatns/pm.dart';
 import 'package:get/get.dart';
 import 'package:inventory_mangament_app/constatns/string.dart';
-
+import 'package:get/get.dart';
+import 'package:inventory_mangament_app/ui/pages/forgot/controller/forgot-controller.dart';
 import '../../../widgets/custom-button.dart';
 import '../../../widgets/text-box.dart';
 
@@ -15,6 +16,7 @@ class ForgotView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final ForgotController forgotController = Get.put(ForgotController());
     return Scaffold(
       backgroundColor: primaryColor,
       body: Container(
@@ -39,32 +41,40 @@ class ForgotView extends StatelessWidget {
                 height: pm24,
               ),
               CustomTextBox(
-                hint: enterEmail,
-                controller: TextEditingController(),
-              ),
+                  hint: enterEmail,
+                  controller: forgotController.emailController),
               const SizedBox(
                 height: pm20,
               ),
               CustomTextBox(
-                hint: enterNewPass,
-                controller: TextEditingController(),
-              ),
+                  hint: enterNewPass,
+                  controller: forgotController.passwordController),
               const SizedBox(
                 height: pm20,
               ),
               CustomTextBox(
                 hint: enterConfirmPass,
-                controller: TextEditingController(),
+                controller: forgotController.confirmPasswordController,
               ),
               const SizedBox(
                 height: pm20,
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: CustomButton(
-                  tap: () {},
-                  title: change,
-                ),
+                child: Obx(() {
+                  return forgotController.isLoading.value == false
+                      ? CustomButton(
+                          tap: () {
+                            forgotController.doValidateUser();
+                          },
+                          title: change,
+                        )
+                      : CustomButton(
+                          isLoadingButton: true,
+                          tap: () {},
+                          title: change,
+                        );
+                }),
               ),
               const SizedBox(
                 height: pm40,

@@ -1,7 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_mangament_app/constatns/color.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-model.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-request-model.dart';
 import 'package:inventory_mangament_app/ui/pages/floor-room/model/floor-response-model.dart';
@@ -18,6 +21,7 @@ class FloorRoomController extends GetxController {
   var floorList = <FloorResponseModel>[].obs;
   var roomList = <RoomResponseModel>[].obs;
   final TextEditingController textEditingController = TextEditingController();
+  final TextEditingController updateEditingController = TextEditingController();
   var isLoading = false.obs;
 
   void getFloor(String buldingId) async {
@@ -34,18 +38,33 @@ class FloorRoomController extends GetxController {
     print(floorList.length);
   }
 
+  bool isAlradyNameExistOnList(dynamic d, List<dynamic> list) {
+    for (var item in list) {
+      if (item.name.toLowerCase() == d.name.toLowerCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   void addNewFloor(String id, FloorRequestModel data) async {
-    isLoading.value = true;
+    if (isAlradyNameExistOnList(data, floorList)) {
+      Get.snackbar("Ops", "This name alrady exist",
+          colorText: whiteColor, backgroundColor: Colors.red);
+    } else {
+      isLoading.value = true;
 
-    await FloorService.addFloor(id, data);
+      await FloorService.addFloor(id, data);
 
-    var list = (await FloorService.allBuildign(id)).cast<FloorResponseModel>();
+      var list =
+          (await FloorService.allBuildign(id)).cast<FloorResponseModel>();
 
-    print(floorList.length);
-    //buildingList.add(building!);
-    isLoading.value = false;
-    floorList.value = list;
-    print(floorList.length);
+      print(floorList.length);
+      //buildingList.add(building!);
+      isLoading.value = false;
+      floorList.value = list;
+      print(floorList.length);
+    }
   }
 
   void deleteBuilding(String floorid, String buildingId) async {
@@ -74,17 +93,23 @@ class FloorRoomController extends GetxController {
   }
 
   void addNewRoom(String id, RoomRequestModel data) async {
-    isLoading.value = true;
+    if (isAlradyNameExistOnList(data, roomList)) {
+      Get.snackbar("Ops", "This name alrady exist",
+          colorText: whiteColor, backgroundColor: Colors.red);
+    } else {
+      isLoading.value = true;
 
-    await RoomService.addRoom(id, data);
+      await RoomService.addRoom(id, data);
 
-    var list = (await RoomService.allRoombyFloor(id)).cast<RoomResponseModel>();
+      var list =
+          (await RoomService.allRoombyFloor(id)).cast<RoomResponseModel>();
 
-    print(roomList.length);
-    //buildingList.add(building!);
-    isLoading.value = false;
-    roomList.value = list;
-    print(roomList.length);
+      print(roomList.length);
+      //buildingList.add(building!);
+      isLoading.value = false;
+      roomList.value = list;
+      print(roomList.length);
+    }
   }
 
   void deleteRoom(String floorid, String roomId) async {
@@ -94,6 +119,48 @@ class FloorRoomController extends GetxController {
     if (isDeleted) {
       getRoom(floorid);
     }
+    isLoading(false);
+  }
+
+  void updateFloor(floorid, buildingId) async {
+    isLoading(true);
+    try {
+      bool isEdited = await FloorService()
+          .updateFloor(floorid, buildingId, updateEditingController.text);
+      if (isEdited) {
+        Get.back();
+        Get.snackbar("Updated", "Successfully Updated",
+            colorText: whiteColor, backgroundColor: Colors.green);
+        getFloor(buildingId);
+      }
+    } on SocketException {
+      Get.snackbar("Oh", "No Internet",
+          colorText: whiteColor, backgroundColor: Colors.red);
+    } catch (e) {
+      print(e.toString());
+    }
+
+    isLoading(false);
+  }
+
+  void updateRoom(String floorid, String roomId) async {
+    isLoading(true);
+    try {
+      bool isEdited = await RoomService()
+          .updateRoom(roomId, floorid, updateEditingController.text);
+      if (isEdited) {
+        Get.back();
+        Get.snackbar("Updated", "Successfully Updated",
+            colorText: whiteColor, backgroundColor: Colors.green);
+        getRoom(floorid);
+      }
+    } on SocketException {
+      Get.snackbar("Oh", "No Internet",
+          colorText: whiteColor, backgroundColor: Colors.red);
+    } catch (e) {
+      print(e.toString());
+    }
+
     isLoading(false);
   }
   // void removeItem(ItemModel item) {

@@ -31,16 +31,16 @@ class AssetRequestModel {
     required this.asset,
   });
 
-  AssetRequestModel copyWith({
-    String? name,
-    String? gpsLatitude,
-    String? gpsLongitude,
-    DateTime? date,
-    String? imageUrl,
-    String? initialTag,
-    String? remarks,
-    Asset? asset,
-  }) =>
+  AssetRequestModel copyWith(
+          {String? name,
+          String? gpsLatitude,
+          String? gpsLongitude,
+          DateTime? date,
+          String? imageUrl,
+          String? initialTag,
+          String? remarks,
+          Asset? asset,
+          String? addedBy}) =>
       AssetRequestModel(
         name: name ?? this.name,
         gpsLatitude: gpsLatitude ?? this.gpsLatitude,

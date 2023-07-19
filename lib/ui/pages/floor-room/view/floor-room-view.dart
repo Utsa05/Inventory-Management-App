@@ -109,14 +109,21 @@ class Addnew extends StatelessWidget {
                   //     district: controller.routeItemInfo.district!,
                   //     thana: controller.routeItemInfo.thane!,
                   //     id: random.nextInt(10000)));
-
-                  controller.addNewFloor(
-                      controller.routeItemInfo.buildingId.toString(),
-                      FloorRequestModel(
-                          name: controller.textEditingController.text,
-                          active: true,
-                          buildingId: 63));
-
+                  if (controller.textEditingController.value.text.isEmpty) {
+                    Get.snackbar(
+                      "Ops",
+                      "Filed cannot be empty",
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                  } else {
+                    controller.addNewFloor(
+                        controller.routeItemInfo.buildingId.toString(),
+                        FloorRequestModel(
+                            name: controller.textEditingController.text,
+                            active: true,
+                            buildingId: 63));
+                  }
                   controller.textEditingController.clear();
                 },
                 child: Text(
@@ -227,6 +234,90 @@ class ItemWidget extends StatelessWidget {
                   },
                   icon: Icon(
                     Icons.remove_red_eye,
+                    color: whiteColor,
+                    size: pm20,
+                  ))),
+          const SizedBox(
+            width: pm12,
+          ),
+          CircleAvatar(
+              radius: pm17,
+              backgroundColor: Colors.red,
+              child: IconButton(
+                  onPressed: () {
+                    // controller.removeItem(item);
+                    controller.updateEditingController.text = item.name;
+
+                    showDialog(
+                        context: context,
+                        builder: (builder) {
+                          return AlertDialog(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            content: Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: pm24, top: pm10),
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: whiteColor,
+                                    borderRadius: BorderRadius.circular(pm10)),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: pm20, vertical: pm15),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller:
+                                            controller.updateEditingController,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall!
+                                            .copyWith(fontSize: pm17),
+                                        decoration: InputDecoration(
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall!
+                                              .copyWith(fontSize: pm15),
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                        onPressed: () {
+                                          //test - create new building
+                                          if (controller.updateEditingController
+                                              .value.text.isEmpty) {
+                                            Get.snackbar(
+                                              "Ops",
+                                              "Filed cannot be empty",
+                                              backgroundColor: Colors.red,
+                                              colorText: Colors.white,
+                                            );
+                                          } else {
+                                            controller.updateFloor(
+                                                item.id.toString(),
+                                                item.buildingId.toString());
+                                          }
+
+                                          controller.updateEditingController
+                                              .clear();
+                                        },
+                                        child: Text(
+                                          save,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge!
+                                              .copyWith(fontSize: pm15),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                  icon: Icon(
+                    Icons.edit,
                     color: whiteColor,
                     size: pm20,
                   ))),
@@ -397,6 +488,90 @@ class ItemRoomWidget extends StatelessWidget {
               backgroundColor: Colors.red,
               child: IconButton(
                   onPressed: () {
+                    // controller.removeItem(item);
+                    controller.updateEditingController.text = item.name;
+
+                    showDialog(
+                        context: context,
+                        builder: (builder) {
+                          return AlertDialog(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            content: Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: pm24, top: pm10),
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: whiteColor,
+                                    borderRadius: BorderRadius.circular(pm10)),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: pm20, vertical: pm15),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller:
+                                            controller.updateEditingController,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall!
+                                            .copyWith(fontSize: pm17),
+                                        decoration: InputDecoration(
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall!
+                                              .copyWith(fontSize: pm15),
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                        onPressed: () {
+                                          //test - create new building
+                                          if (controller.updateEditingController
+                                              .value.text.isEmpty) {
+                                            Get.snackbar(
+                                              "Ops",
+                                              "Filed cannot be empty",
+                                              backgroundColor: Colors.red,
+                                              colorText: Colors.white,
+                                            );
+                                          } else {
+                                            controller.updateRoom(
+                                                item.floorId.toString(),
+                                                item.id.toString());
+                                          }
+
+                                          controller.updateEditingController
+                                              .clear();
+                                        },
+                                        child: Text(
+                                          save,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge!
+                                              .copyWith(fontSize: pm15),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    color: whiteColor,
+                    size: pm20,
+                  ))),
+          const SizedBox(
+            width: pm12,
+          ),
+          CircleAvatar(
+              radius: pm17,
+              backgroundColor: Colors.red,
+              child: IconButton(
+                  onPressed: () {
                     warningDialog(context, () {
                       controller.deleteRoom(
                           item.floorId.toString(), item.id.toString());
@@ -450,14 +625,19 @@ class AddRoomnew extends StatelessWidget {
             ),
             TextButton(
                 onPressed: () {
-                  controller.addNewRoom(
-                      controller.floorID.value,
-                      RoomRequestModel(
-                          name: controller.textEditingController.text,
-                          active: true,
-                          floorId: 10));
+                  if (controller.textEditingController.value.text.isNotEmpty) {
+                    controller.addNewRoom(
+                        controller.floorID.value,
+                        RoomRequestModel(
+                            name: controller.textEditingController.text,
+                            active: true,
+                            floorId: 10));
 
-                  controller.textEditingController.clear();
+                    controller.textEditingController.clear();
+                  } else {
+                    Get.snackbar("Ops", "Room no cannot be empty",
+                        colorText: whiteColor, backgroundColor: Colors.red);
+                  }
                 },
                 child: Text(
                   save,

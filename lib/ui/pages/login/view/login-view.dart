@@ -48,6 +48,7 @@ class LoginView extends StatelessWidget {
                 height: pm20,
               ),
               CustomTextBox(
+                isPassword: true,
                 hint: enterPassword,
                 controller: controller.passwordController,
               ),

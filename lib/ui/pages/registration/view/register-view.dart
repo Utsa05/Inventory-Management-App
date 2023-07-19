@@ -47,6 +47,7 @@ class RegisterView extends StatelessWidget {
                 height: pm20,
               ),
               CustomTextBox(
+                isPassword: true,
                 hint: enterPassword,
                 controller: registerController.passwordController,
               ),
@@ -54,6 +55,7 @@ class RegisterView extends StatelessWidget {
                 height: pm20,
               ),
               CustomTextBox(
+                isPassword: true,
                 hint: enterConfirmPass,
                 controller: registerController.confirmPasswordController,
               ),

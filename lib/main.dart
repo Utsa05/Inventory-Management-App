@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(prefs.getString(email));
+    print(prefs.getString(token));
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: appName,

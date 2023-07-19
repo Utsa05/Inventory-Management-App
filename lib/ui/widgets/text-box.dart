@@ -11,16 +11,19 @@ class CustomTextBox extends StatelessWidget {
       required this.controller,
       this.isNotCirle,
       this.line,
-      this.type});
+      this.type,
+      this.isPassword});
   final String hint;
   final TextEditingController controller;
   final bool? isNotCirle;
   final int? line;
   final TextInputType? type;
+  final bool? isPassword;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      obscureText: isPassword ?? false,
       maxLines: line ?? 1,
       minLines: line ?? 1,
       keyboardType: type ?? TextInputType.name,

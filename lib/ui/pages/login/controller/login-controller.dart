@@ -52,7 +52,7 @@ class LoignController extends GetxController {
       isLoading.value = false;
       Get.snackbar(
         "Wrong",
-        "User Not Found",
+        response.message,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
