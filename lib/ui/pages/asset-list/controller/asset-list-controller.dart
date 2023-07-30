@@ -31,6 +31,7 @@ class AssetListController extends GetxController {
   var pickedFile = XFile("path").obs;
   var isAlreadyAddedAsset = false.obs;
   var isAssetLoading = false.obs;
+  var isHide = true.obs;
   var assetListOnline = <BuildingCreateResponseModel>[].obs;
 
   var selectedDropdownVlau = "".obs;
@@ -111,11 +112,13 @@ class AssetListController extends GetxController {
   @override
   void onClose() {
     isAlreadyAddedAsset.value = false;
+    isHide.value = true;
     super.onClose();
   }
 
   @override
   void onInit() {
+    isHide.value = true;
     isAlreadyAddedAsset.value = false;
     print(routeInfo.roomNo);
     print("room ID:${routeInfo.roomId}");

@@ -26,36 +26,86 @@ class AssetListView extends StatelessWidget {
             style: Theme.of(context).textTheme.displayMedium,
           ),
         ),
-        body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-            ),
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/images/bgimg.png'),
-                    fit: BoxFit.cover)),
-            child: SafeArea(
-                child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${assetListController.routeInfo.district}> ${assetListController.routeInfo.thane}> ${assetListController.routeInfo.building}> ${assetListController.routeInfo.floorNo}> ${assetListController.routeInfo.roomNo}",
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(fontSize: pm15),
-                  ),
+        body: Stack(
+          children: [
+            Container(
+                height: MediaQuery.of(context).size.height,
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
                 ),
-                const SizedBox(
-                  height: pm15,
-                ),
-                AssetList(assetListController: assetListController),
-                Addnew(controller: assetListController),
-              ],
-            ))));
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/bgimg.png'),
+                        fit: BoxFit.cover)),
+                child: SafeArea(
+                    child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "${assetListController.routeInfo.district}> ${assetListController.routeInfo.thane}> ${assetListController.routeInfo.building}> ${assetListController.routeInfo.floorNo}> ${assetListController.routeInfo.roomNo}",
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(fontSize: pm15),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: pm15,
+                    ),
+                    AssetList(assetListController: assetListController),
+                    Addnew(controller: assetListController),
+                  ],
+                ))),
+            Obx(() {
+              return assetListController.isHide.value == false
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 100),
+                      color: primaryColor,
+                      alignment: Alignment.topCenter,
+                      padding: const EdgeInsets.all(20),
+                      child: Obx(() {
+                        return SimpleAutoCompleteTextField(
+                            //  minLength: 2,
+                            key: const GlobalObjectKey(1),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: pm15),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(defoultPM),
+                              ),
+                              //isDense: true,
+                              fillColor: whiteColor,
+                              filled: true,
+                              hintText: "Asset Name",
+                              hintStyle: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: pm18),
+                            ),
+                            controller:
+                                assetListController.assetTextController.value,
+                            suggestions: assetListController.suggetionList,
+                            clearOnSubmit: false,
+                            textSubmitted: (text) {
+                              assetListController
+                                  .assetTextController.value.text = text;
+                              assetListController.changeDropdownValue(text);
+                              assetListController.isHide.value = true;
+                            });
+                      }),
+                    )
+                  : Container();
+            })
+          ],
+        ));
   }
 }
 
@@ -113,89 +163,92 @@ class AssetDetailsItem extends StatelessWidget {
                   fit: BoxFit.cover, height: pm90, width: pm90, item.imageUrl),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.initialTag.toString(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayMedium!
-                      .copyWith(fontSize: 16),
-                ),
-                Text(
-                  "${item.building},${item.floor},${item.room}",
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(fontSize: 13),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-                Wrap(
-                  children: [
-                    Text(
-                      "Lon:${item.gpsLongitude}\nLat:${item.gpsLatitude}",
-                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                            fontSize: 12,
-                          ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    )
-                  ],
-                ),
-                Text(
-                  "${item.district},${item.thana}",
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(fontSize: 12, color: blackColor),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 5),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                          color: blueColor,
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Text(
-                        item.date.toString().split(" ").first,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(fontSize: 12, color: whiteColor),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.initialTag.toString(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium!
+                        .copyWith(fontSize: 16),
+                  ),
+                  Text(
+                    "${item.building},${item.floor},${item.room}",
+                    style: Theme.of(context)
+                        .textTheme
+                        .displaySmall!
+                        .copyWith(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                  ),
+                  Wrap(
+                    children: [
+                      Text(
+                        "Lon:${item.gpsLongitude}\nLat:${item.gpsLatitude}",
+                        style:
+                            Theme.of(context).textTheme.displaySmall!.copyWith(
+                                  fontSize: 12,
+                                ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
+                      )
+                    ],
+                  ),
+                  Text(
+                    "${item.district},${item.thana}",
+                    style: Theme.of(context)
+                        .textTheme
+                        .displaySmall!
+                        .copyWith(fontSize: 12, color: blackColor),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                            color: blueColor,
+                            borderRadius: BorderRadius.circular(25)),
+                        child: Text(
+                          item.date.toString().split(" ").first,
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(fontSize: 12, color: whiteColor),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                        splashRadius: 10,
-                        onPressed: () {
-                          final controller = Get.put(AssetListController());
+                      IconButton(
+                          splashRadius: 10,
+                          onPressed: () {
+                            final controller = Get.put(AssetListController());
 
-                          warningDialog(context, () {
-                            controller.deleteBuilding(
-                                controller.routeInfo.roomId.toString(),
-                                item.id.toString());
-                            Navigator.of(context).pop();
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.red,
-                          size: 20,
-                        ))
-                  ],
-                ),
-              ],
+                            warningDialog(context, () {
+                              controller.deleteBuilding(
+                                  controller.routeInfo.roomId.toString(),
+                                  item.id.toString());
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                            size: 20,
+                          ))
+                    ],
+                  ),
+                ],
+              ),
             ),
           )
         ],
@@ -247,40 +300,24 @@ class Addnew extends StatelessWidget {
                               color: blackColor,
                             ),
                           )
-                        : SizedBox(
-                            height: pm50,
-                            child: SimpleAutoCompleteTextField(
-                                key: const GlobalObjectKey(1),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall!
-                                    .copyWith(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: pm20),
-                                decoration: InputDecoration(
-                                    isDense: false,
-                                    fillColor: whiteColor,
-                                    filled: true,
-                                    hintText: "Asset Name",
-                                    hintStyle: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: pm18),
-                                    border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(defoultPM),
-                                    )),
-                                controller:
-                                    controller.assetTextController.value,
-                                suggestions: controller.suggetionList,
-                                clearOnSubmit: false,
-                                textSubmitted: (text) {
-                                  controller.assetTextController.value.text =
-                                      text;
-                                  controller.changeDropdownValue(text);
-                                }),
+                        : GestureDetector(
+                            onTap: () {
+                              controller.isHide.value = false;
+                            },
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  border:
+                                      Border.all(width: 1, color: blackColor)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  controller.assetTextController.value.text,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
                           );
                   }
                       //  DropdownButtonHideUnderline(
