@@ -65,42 +65,67 @@ class AssetListView extends StatelessWidget {
                       color: primaryColor,
                       alignment: Alignment.topCenter,
                       padding: const EdgeInsets.all(20),
-                      child: Obx(() {
-                        return SimpleAutoCompleteTextField(
-                            //  minLength: 2,
-                            key: const GlobalObjectKey(1),
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: pm15),
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(defoultPM),
-                              ),
-                              //isDense: true,
-                              fillColor: whiteColor,
-                              filled: true,
-                              hintText: "Asset Name",
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: pm18),
-                            ),
-                            controller:
-                                assetListController.assetTextController.value,
-                            suggestions: assetListController.suggetionList,
-                            clearOnSubmit: false,
-                            textSubmitted: (text) {
-                              assetListController
-                                  .assetTextController.value.text = text;
-                              assetListController.changeDropdownValue(text);
-                              assetListController.isHide.value = true;
-                            });
-                      }),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text("Select Asset"),
+                              IconButton(
+                                  onPressed: () {
+                                    assetListController.isHide.value = true;
+                                  },
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                  ))
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 13,
+                          ),
+                          Obx(() {
+                            return SimpleAutoCompleteTextField(
+                                //  minLength: 2,
+                                key: const GlobalObjectKey(1),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: pm15),
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(defoultPM),
+                                  ),
+                                  //isDense: true,
+                                  fillColor: whiteColor,
+                                  filled: true,
+                                  hintText: "Asset Name",
+                                  hintStyle: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: pm18),
+                                ),
+                                controller: assetListController
+                                    .assetTextController.value,
+                                suggestions: assetListController.suggetionList,
+                                clearOnSubmit: false,
+                                textSubmitted: (text) {
+                                  assetListController
+                                      .assetTextController.value.text = text;
+                                  assetListController.changeDropdownValue(text);
+                                  assetListController.isHide.value = true;
+                                });
+                          }),
+                        ],
+                      ),
                     )
                   : Container();
             })
